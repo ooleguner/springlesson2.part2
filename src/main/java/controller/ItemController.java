@@ -9,22 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import repository.DAOInterface;
-import repository.ItemDao;
 import service.ItemService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-/**
- * Created by oleg on 23.06.2019.
- */
-
 
 @Controller
 public class ItemController {
@@ -89,7 +79,7 @@ public class ItemController {
     String  saveItem(HttpServletRequest req) {
 
         try {
-           return "Item " + itemService.save(mappingItemInString(req)).toString() +" successfully saved";
+           return "Item " + itemService.save(mappingItem(req)).toString() +" successfully saved";
         } catch (IOException e) {
            return e.getMessage();
         } catch (ItemExistException e) {
@@ -105,7 +95,7 @@ public class ItemController {
     String  updateItem(HttpServletRequest req) {
 
         try {
-            return "Item " + itemService.update(mappingItemInString(req)).toString() +" successfully updated";
+            return "Item " + itemService.update(mappingItem(req)).toString() +" successfully updated";
         } catch (IOException e) {
             return e.getMessage();
         } catch (ItemExistException e) {
@@ -115,7 +105,7 @@ public class ItemController {
         }
     }
 
-    private Item mappingItemInString(HttpServletRequest req) throws IOException {
+    private Item mappingItem(HttpServletRequest req) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         ObjectMapper objectMapper = new ObjectMapper();
         String line;
