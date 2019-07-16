@@ -2,8 +2,8 @@ package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import exception.ItemExistException;
-import exception.RepoAccessEcxeption;
 import model.Item;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +27,8 @@ public class ItemController {
     String getItems() {
         try {
             return itemService.getAllItems().toString();
-        } catch (RepoAccessEcxeption repoAccessEcxeption) {
-            return repoAccessEcxeption.getMessage();
+        } catch (HibernateException e) {
+            return e.getMessage();
         }
     }
 
@@ -42,8 +42,8 @@ public class ItemController {
             return itemService.getByID(Integer.parseInt(req.getParameter("ID"))).toString();
         } catch (NumberFormatException parseException) {
             return "ID has wrong format - only digit is allowed :  " + parseException.getMessage();
-        } catch (RepoAccessEcxeption repoAccessEcxeption) {
-            return repoAccessEcxeption.getMessage();
+        } catch (HibernateException e) {
+            return e.getMessage();
         } catch (ItemExistException e) {
             return e.getMessage();
         }
@@ -60,8 +60,8 @@ public class ItemController {
             return "Item with ID " + req.getParameter("ID") + " is deleted";
         } catch (NumberFormatException parseException) {
             return "ID has wrong format - only digit is allowed :  " + parseException.getMessage();
-        } catch (RepoAccessEcxeption repoAccessEcxeption) {
-            return repoAccessEcxeption.getMessage();
+        } catch (HibernateException e) {
+            return e.getMessage();
         } catch (ItemExistException e) {
             return e.getMessage();
         }
@@ -84,8 +84,8 @@ public class ItemController {
            return e.getMessage();
         } catch (ItemExistException e) {
            return e.getMessage();
-        } catch (RepoAccessEcxeption repoAccessEcxeption) {
-           return repoAccessEcxeption.getMessage();
+        } catch (HibernateException e) {
+           return e.getMessage();
         }
     }
 
@@ -100,8 +100,8 @@ public class ItemController {
             return e.getMessage();
         } catch (ItemExistException e) {
             return e.getMessage();
-        } catch (RepoAccessEcxeption repoAccessEcxeption) {
-            return repoAccessEcxeption.getMessage();
+        } catch (HibernateException e) {
+            return e.getMessage();
         }
     }
 

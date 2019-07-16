@@ -1,6 +1,5 @@
 package repository;
 
-import exception.RepoAccessEcxeption;
 import model.Item;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -20,7 +19,7 @@ public class ItemDao implements DAOInterface {
     ArrayList<Item> items = null;
     Item item = null;
 
-    public ArrayList<Item> getAllItems() throws RepoAccessEcxeption {
+    public ArrayList<Item> getAllItems() throws HibernateException {
         Transaction tr = null;
         try (Session session = SessionFactoryBuilder.createSessionFactory().openSession()) {
             tr = session.getTransaction();
@@ -29,11 +28,11 @@ public class ItemDao implements DAOInterface {
             tr.commit();
             return items;
         } catch (HibernateException e) {
-            throw new RepoAccessEcxeption(e.getMessage());
+            throw e;
         }
     }
 
-    public Item getItemById(long id) throws RepoAccessEcxeption {
+    public Item getItemById(long id) throws HibernateException {
         Transaction tr = null;
         try (Session session = SessionFactoryBuilder.createSessionFactory().openSession()) {
             tr = session.getTransaction();
@@ -42,11 +41,11 @@ public class ItemDao implements DAOInterface {
             tr.commit();
             return item;
         } catch (HibernateException e) {
-            throw new RepoAccessEcxeption(e.getMessage());
+            throw  e;
         }
     }
 
-    public void deleteItem(long id) throws RepoAccessEcxeption {
+    public void deleteItem(long id) throws HibernateException {
         Transaction tr = null;
         try (Session session = SessionFactoryBuilder.createSessionFactory().openSession()) {
             tr = session.getTransaction();
@@ -57,11 +56,11 @@ public class ItemDao implements DAOInterface {
             if (tr != null) {
                 tr.rollback();
             }
-            throw new RepoAccessEcxeption(e.getMessage());
+            throw e;
         }
     }
 
-    public Item saveItem(Item item) throws RepoAccessEcxeption {
+    public Item saveItem(Item item) throws HibernateException {
         Transaction tr = null;
         try (Session session = SessionFactoryBuilder.createSessionFactory().openSession()) {
             tr = session.getTransaction();
@@ -73,11 +72,11 @@ public class ItemDao implements DAOInterface {
             if (tr != null) {
                 tr.rollback();
             }
-            throw new RepoAccessEcxeption(e.getMessage());
+            throw  e;
         }
     }
 
-    public Item updateItem(Item item) throws RepoAccessEcxeption {
+    public Item updateItem(Item item) throws HibernateException{
         Transaction tr = null;
         try (Session session = SessionFactoryBuilder.createSessionFactory().openSession()) {
             tr = session.getTransaction();
@@ -89,7 +88,7 @@ public class ItemDao implements DAOInterface {
             if (tr != null) {
                 tr.rollback();
             }
-            throw new RepoAccessEcxeption(e.getMessage());
+            throw e;
         }
     }
 }

@@ -1,8 +1,8 @@
 package service;
 
 import exception.ItemExistException;
-import exception.RepoAccessEcxeption;
 import model.Item;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import repository.ItemDao;
 
@@ -19,18 +19,18 @@ public class ItemService {
 
     List<Item> items;
 
-    public ArrayList<Item> getAllItems() throws RepoAccessEcxeption {
+    public ArrayList<Item> getAllItems() throws HibernateException {
         return dao.getAllItems();
     }
 
-    public Item getByID(long id) throws RepoAccessEcxeption, ItemExistException {
+    public Item getByID(long id) throws HibernateException, ItemExistException {
         if (checkIfIsExist(id)) {
             return dao.getItemById(id);
         }
         throw new ItemExistException("Item with id : " + id + " is not present in base");
     }
 
-    private boolean checkIfIsExist(Long id) throws RepoAccessEcxeption {
+    private boolean checkIfIsExist(Long id) throws HibernateException {
         items = getAllItems();
         for (Item itemFromDB : items) {
             if (itemFromDB.getId().equals(id)) {
@@ -40,7 +40,7 @@ public class ItemService {
         return false;
     }
 
-    public void delete(long id) throws RepoAccessEcxeption, ItemExistException {
+    public void delete(long id) throws HibernateException, ItemExistException {
         if (!checkIfIsExist(id)) {
             throw new ItemExistException("Item with id : " + id + " is not present in base");
         }
@@ -48,7 +48,7 @@ public class ItemService {
     }
 
 
-    public Item save(Item item) throws RepoAccessEcxeption, ItemExistException {
+    public Item save(Item item) throws HibernateException, ItemExistException {
         items = getAllItems();
         for (Item itemFromDB : items) {
             if (itemFromDB.getName().equals(item.getName())) {
@@ -59,7 +59,7 @@ public class ItemService {
     }
 
 
-    public Item update(Item item) throws RepoAccessEcxeption, ItemExistException {
+    public Item update(Item item) throws HibernateException, ItemExistException {
         if (checkIfIsExist(item.getId())) {
             return dao.updateItem(item);
         }
