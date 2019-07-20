@@ -1,14 +1,12 @@
-package model;
+package lesson2_2.model;
 
-import Helpers.LocalDateDeserializer;
-import Helpers.LocalDateSerializer;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lesson2_2.Helpers.LocalDateDeserializer;
+import lesson2_2.Helpers.LocalDateSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * Created by oleg on 03.06.2019.

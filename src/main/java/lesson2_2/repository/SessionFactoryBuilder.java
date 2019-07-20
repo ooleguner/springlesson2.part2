@@ -1,4 +1,4 @@
-package repository;
+package lesson2_2.repository;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;

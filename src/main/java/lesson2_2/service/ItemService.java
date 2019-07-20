@@ -1,10 +1,10 @@
-package service;
+package lesson2_2.service;
 
-import exception.ItemExistException;
-import model.Item;
+import lesson2_2.exception.ItemExistException;
+import lesson2_2.model.Item;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
-import repository.ItemDao;
+import lesson2_2.repository.ItemDao;
 
 import java.util.ArrayList;
 import java.util.List;

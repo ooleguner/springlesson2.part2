@@ -1,6 +1,6 @@
-package repository;
+package lesson2_2.repository;
 
-import model.Item;
+import lesson2_2.model.Item;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;

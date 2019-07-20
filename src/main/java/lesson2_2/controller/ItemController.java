@@ -1,15 +1,15 @@
-package controller;
+package lesson2_2.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import exception.ItemExistException;
-import model.Item;
+import lesson2_2.exception.ItemExistException;
+import lesson2_2.model.Item;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import service.ItemService;
+import lesson2_2.service.ItemService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -115,4 +115,5 @@ public class ItemController {
         }
         return objectMapper.readValue(stringBuilder.toString(), Item.class);
     }
+
 }
