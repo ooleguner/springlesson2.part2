@@ -10,7 +10,12 @@
 
     <bean id="storage_1" class="lesson3_HW.beans.Storage"/>
     <bean id="storage_2" class="lesson3_HW.beans.Storage"/>
-    <bean id="storageController" class="lesson3_HW.controller.StorageController"/>
+    <bean id="generalDao" class="lesson3_HW.dao.GeneralDao" abstract="true"/>
+    <bean id="storageDaoImpl" class="lesson3_HW.dao.StorageDaoImpl"/>
+    <bean id="storageController" class="lesson3_HW.controller.StorageController">
+        <constructor-arg ref="storageDaoImpl"/>
+    </bean>
+
 </beans>
 
         <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
