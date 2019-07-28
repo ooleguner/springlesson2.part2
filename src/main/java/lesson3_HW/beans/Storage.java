@@ -1,38 +1,42 @@
-package lesson3_HW.Beans;
+package lesson3_HW.beans;
 
+import javax.persistence.*;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created by oleg on 25.07.2019.
- */
+@Entity
+@Table(name = "STORAGES")
 public class Storage {
-   private long id;
-    private String[] formatsSupported;
+    private long id;
+    private String formatsSupported;
     private String storageCountry;
     private long storageSize;
-    private static final AtomicInteger AUTO_ID = new AtomicInteger(0);
 
 
-    public Storage(String[] formatsSupported, String storageCountry, long storageSize) {
-        this.id = AUTO_ID.getAndIncrement();
-        this.formatsSupported = formatsSupported;
-        this.storageCountry = storageCountry;
-        this.storageSize = storageSize;
+    public Storage() {
     }
 
+    @Id
+    @SequenceGenerator(name = "SEQ_ST", sequenceName = "SEQ_STORAGE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_ST")
+    @Column(name = "ID")
     public long getId() {
         return id;
     }
 
-    public String[] getFormatsSupported() {
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Column(name = "FORMATS_SUPPORTED")
+    public String getFormatsSupported() {
         return formatsSupported;
     }
 
-    public void setFormatsSupported(String[] formatsSupported) {
+    public void setFormatsSupported(String formatsSupported) {
         this.formatsSupported = formatsSupported;
     }
 
+    @Column(name = "STORAGE_COUNTY")
     public String getStorageCountry() {
         return storageCountry;
     }
@@ -41,6 +45,7 @@ public class Storage {
         this.storageCountry = storageCountry;
     }
 
+    @Column(name = "STORAGE_SIZE")
     public long getStorageSize() {
         return storageSize;
     }
@@ -53,7 +58,7 @@ public class Storage {
     public String toString() {
         return "Storage{" +
                 "id=" + id +
-                ", formatsSupported=" + Arrays.toString(formatsSupported) +
+                ", formatsSupported=" + formatsSupported +
                 ", storageCountry='" + storageCountry + '\'' +
                 ", storageSize=" + storageSize +
                 '}';

@@ -4,7 +4,13 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <context:annotation-config/>
 
+    <context:component-scan base-package="lesson3_HW"/>
+
+    <bean id="storage_1" class="lesson3_HW.beans.Storage"/>
+    <bean id="storage_2" class="lesson3_HW.beans.Storage"/>
+    <bean id="storageController" class="lesson3_HW.controller.StorageController"/>
 
 
 </beans>

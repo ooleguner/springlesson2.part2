@@ -1,12 +1,19 @@
-package lesson3_HW.Beans;
+package lesson3_HW.beans;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by oleg on 25.07.2019.
  */
+@Entity(name = "File")
 public class File {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String format;
