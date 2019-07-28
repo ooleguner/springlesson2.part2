@@ -21,13 +21,14 @@ public class Test {
 
     public static void main(String[] args) {
         Test test = new Test();
-        test.testAddstprage();
+        test.testAddStorage();
     }
 
-    private void testAddstprage() {
+    private void testAddStorage() {
         storage_1.setFormatsSupported("jpg");
         storage_1.setStorageSize(1000);
         storage_1.setStorageCountry("China");
+        System.out.println(storage_1.toString());
         storageController.add(storage_1);
     }
 }
