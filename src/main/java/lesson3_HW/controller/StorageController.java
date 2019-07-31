@@ -1,21 +1,25 @@
 package lesson3_HW.controller;
 
+import lesson3_HW.AppException.BadRequestException;
 import lesson3_HW.beans.Storage;
 import lesson3_HW.dao.GeneralDao;
+import lesson3_HW.dao.StorageDaoImpl;
+import lesson3_HW.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+
 public class StorageController {
 
-    GeneralDao generalDao;
+    StorageService storageService;
+
 
     @Autowired
-    StorageController(GeneralDao generalDao) {
-        this.generalDao = generalDao;
+    StorageController(StorageService storageService) {
+        this.storageService = storageService;
     }
 
-    public Storage add(Storage storage) {
-        return (Storage) generalDao.add(storage);
+    public Storage save(Storage storage) throws BadRequestException {
+        return  storageService.save(storage);
     }
 }

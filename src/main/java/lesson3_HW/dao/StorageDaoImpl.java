@@ -6,6 +6,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +19,7 @@ public class StorageDaoImpl implements GeneralDao<Storage> {
 
     private SessionFactory sessionFactory;
     private Transaction transaction;
+    private List storageList;
 
     private SessionFactory createSessionFacrory() {
         if (sessionFactory == null) {
@@ -26,7 +29,7 @@ public class StorageDaoImpl implements GeneralDao<Storage> {
     }
 
     @Override
-    public Storage add(Storage storage) {
+    public Storage save (Storage storage)  {
         try (Session session = createSessionFacrory().openSession()) {
             transaction = session.getTransaction();
             transaction.begin();
@@ -56,6 +59,17 @@ public class StorageDaoImpl implements GeneralDao<Storage> {
 
     @Override
     public List<Storage> listAll() {
-        return null;
+        try(Session session = createSessionFacrory().openSession()){
+            transaction=session.getTransaction();
+            transaction.begin();
+            storageList=(List<Storage>)session.createQuery("FROM Storage").list();
+            transaction.commit();
+        }catch (HibernateException msg){
+            if(transaction != null)
+                transaction.rollback();
+
+            System.out.println(msg.getMessage());
+        }
+        return storageList;
     }
 }

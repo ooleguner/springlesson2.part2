@@ -10,7 +10,7 @@ public class FileDaoImpl implements GeneralDao {
 
 
     @Override
-    public Object add(Object o) {
+    public Object save(Object o) {
         return null;
     }
 

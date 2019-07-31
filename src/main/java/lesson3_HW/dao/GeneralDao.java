@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface GeneralDao<T> {
 
-    public T add(T t);
+    public T save (T t);
 
     public void remove(Long id);
 

@@ -8,57 +8,21 @@
 
     <context:component-scan base-package="lesson3_HW"/>
 
-    <bean id="storage_1" class="lesson3_HW.beans.Storage"/>
-    <bean id="storage_2" class="lesson3_HW.beans.Storage"/>
-    <bean id="generalDao" class="lesson3_HW.dao.GeneralDao" abstract="true"/>
+    <bean id="storage_1" class="lesson3_HW.beans.Storage">
+        <constructor-arg name="formatsSupported" value="doc"/>
+        <constructor-arg name="storageCountry" value="UKr"/>
+        <constructor-arg name="storageSize" value="340"/>
+    </bean>
+
     <bean id="storageDaoImpl" class="lesson3_HW.dao.StorageDaoImpl"/>
-    <bean id="storageController" class="lesson3_HW.controller.StorageController">
+
+    <bean id="storageService" class="lesson3_HW.service.StorageService">
         <constructor-arg ref="storageDaoImpl"/>
+    </bean>
+
+    <bean id="storageController" class="lesson3_HW.controller.StorageController">
+        <constructor-arg ref="storageService"/>
     </bean>
 
 
 </beans>
-
-        <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-        <!--lesson1-->
-        <!--<context:component-scan base-package="lesson1.com"/>-->
-
-        <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-        <!--lesson2.1-->
-        <!--<context:component-scan base-package="lesson2_1"/>-->
-
-        <!--<bean id="service1" class="lesson2_1.Service">-->
-        <!--<property name="id" value="11"/>-->
-        <!--<property name="name" value="Test"/>-->
-        <!--<property name="paramsToCall" value="Param-1.1, Param-1.2, Param-1.3"/>-->
-        <!--</bean>-->
-
-        <!--<bean id="service2" class="lesson2_1.Service">-->
-        <!--<property name="id" value="12"/>-->
-        <!--<property name="name" value="Test2"/>-->
-        <!--<property name="paramsToCall" value="Param-2.1, Param-2.2, Param-2.3"/>-->
-        <!--</bean>-->
-
-        <!--<bean id="step1" class="lesson2_1.Step">-->
-        <!--<property name="id" value="112"/>-->
-        <!--<property name="serviceFrom" ref="service1"/>-->
-        <!--<property name="serviceTo" ref="service2"/>-->
-        <!--</bean>-->
-
-        <!--<bean id="step2" class="lesson2_1.Step">-->
-        <!--<property name="id" value="113"/>-->
-        <!--<property name="serviceFrom" ref="service1"/>-->
-        <!--<property name="serviceTo" ref="service2"/>-->
-        <!--</bean>-->
-
-        <!--<bean id="route" class="lesson2_1.Route">-->
-        <!--<property name="id" value="1000"/>-->
-        <!--</bean>-->
-        <!--</beans>-->
-
-        <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-        <!--lesson2-2-->
-        <!--<context:component-scan base-package="java"/>-->
-        <!--<bean id = "controller" class="lesson2_2.controller.ItemController"/>-->
-        <!--<bean id = "service" class="lesson2_2.service.ItemService"/>-->
-        <!--<bean id = "dao" class="lesson2_2.repository.ItemDao"/>-->

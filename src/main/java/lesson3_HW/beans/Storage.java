@@ -1,10 +1,12 @@
 package lesson3_HW.beans;
 
+import org.springframework.context.annotation.Bean;
+
 import javax.persistence.*;
 import java.util.Arrays;
 
 @Entity
-@Table(name = "STORAGES")
+@Table(name = "STORAGE")
 public class Storage {
     private long id;
     private String formatsSupported;
@@ -13,6 +15,12 @@ public class Storage {
 
 
     public Storage() {
+    }
+
+    public Storage(String formatsSupported, String storageCountry, long storageSize) {
+        this.formatsSupported = formatsSupported;
+        this.storageCountry = storageCountry;
+        this.storageSize = storageSize;
     }
 
     @Id
@@ -52,6 +60,24 @@ public class Storage {
 
     public void setStorageSize(long storageSize) {
         this.storageSize = storageSize;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Storage storage = (Storage) o;
+        if (storageSize != storage.storageSize) return false;
+        if (!formatsSupported.equals(storage.formatsSupported)) return false;
+        return storageCountry.equals(storage.storageCountry);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = formatsSupported.hashCode();
+        result = 31 * result + storageCountry.hashCode();
+        result = 31 * result + (int) (storageSize ^ (storageSize >>> 32));
+        return result;
     }
 
     @Override

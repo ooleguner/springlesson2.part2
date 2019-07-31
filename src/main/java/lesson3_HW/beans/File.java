@@ -74,7 +74,7 @@ public class File {
                 ", name='" + name + '\'' +
                 ", format='" + format + '\'' +
                 ", size=" + size +
-                ", storage=" + storage.toString() +
+ //               ", storage=" + storage.toString() +
                 '}';
     }
 }
