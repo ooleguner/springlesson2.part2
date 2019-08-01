@@ -49,7 +49,18 @@ public class StorageDaoImpl implements GeneralDao<Storage> {
 
     @Override
     public Storage getById(Long id) {
-        return null;
+       try (Session session = createSessionFacrory().openSession()){
+           transaction= session.getTransaction();
+           transaction.begin();
+           Storage storage= session.get(Storage.class,id);
+           transaction.commit();
+           return storage;
+       }catch (HibernateException msg){
+           if (transaction != null){
+               transaction.rollback();
+           }
+       }
+       return null;
     }
 
     @Override

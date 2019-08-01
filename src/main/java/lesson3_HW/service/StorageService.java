@@ -28,7 +28,7 @@ public class StorageService {
 
     private boolean checkIfExist(Storage storage) {
         ArrayList<Storage> storages = getAllStorages();
-        if (storages.size()==0) {
+        if (storages.size() == 0) {
             return false;
         }
         for (Storage currentStorage : storages) {
@@ -42,4 +42,13 @@ public class StorageService {
     private ArrayList<Storage> getAllStorages() {
         return (ArrayList<Storage>) generalDao.listAll();
     }
+
+    public void delete(long id) throws BadRequestException {
+        Storage storage = (Storage) generalDao.getById(id);
+        if (storage == null) {
+            throw new BadRequestException("Storage with id : " + id + " not found in DB");
+        }
+        generalDao.remove(id);
+    }
+
 }

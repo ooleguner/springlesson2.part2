@@ -21,9 +21,19 @@ public class Test {
     @Autowired
     StorageController storageController;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/add", produces = "texp/plain")
+//    @RequestMapping(method = RequestMethod.GET, value = "/add", produces = "texp/plain")
+//    public @ResponseBody
+//    String testAddStorage() {
+//        try {
+//            return "Test add storsge \n" + storageController.save(storage_1);
+//        } catch (BadRequestException e) {
+//            return e.getMessage();
+//        }
+//    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/del", produces = "texp/plain")
     public @ResponseBody
-    String testAddStorage() {
+    String testDellStorage() {
         try {
             return "Test add storsge \n" + storageController.save(storage_1);
         } catch (BadRequestException e) {
