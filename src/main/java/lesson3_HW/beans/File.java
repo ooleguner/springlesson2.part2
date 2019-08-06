@@ -1,39 +1,41 @@
 package lesson3_HW.beans;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.springframework.stereotype.Controller;
+import javax.persistence.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by oleg on 25.07.2019.
  */
-@Entity(name = "File")
+@Entity
+@Table(name = "FILES")
 public class File {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String format;
     private long size;
     private Storage storage;
 
-    private static final AtomicInteger AUTO_ID = new AtomicInteger(0);
+    public File() {
+    }
 
     public File(String name, String format, long size, Storage storage) {
-        this.id = AUTO_ID.getAndIncrement();
         this.name = name;
         this.format = format;
         this.size = size;
         this.storage = storage;
     }
 
+    @Id
+    @SequenceGenerator(name = "SEQ_FL", sequenceName = "SEQ_FILE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_FL")
+    @Column(name = "ID")
     public long getId() {
         return id;
     }
 
+    @Column(name = "NAME")
     public String getName() {
         return name;
     }
@@ -42,6 +44,7 @@ public class File {
         this.name = name;
     }
 
+    @Column(name = "FORMAT")
     public String getFormat() {
         return format;
     }
@@ -50,6 +53,7 @@ public class File {
         this.format = format;
     }
 
+    @Column(name = "FILE_SIZE")
     public long getSize() {
         return size;
     }
@@ -58,6 +62,8 @@ public class File {
         this.size = size;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "STORAGE_ID", nullable = false)
     public Storage getStorage() {
         return storage;
     }
@@ -74,7 +80,7 @@ public class File {
                 ", name='" + name + '\'' +
                 ", format='" + format + '\'' +
                 ", size=" + size +
- //               ", storage=" + storage.toString() +
+                //               ", storage=" + storage.toString() +
                 '}';
     }
 }

@@ -7,6 +7,7 @@ import lesson3_HW.dao.StorageDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class StorageService {
 
@@ -43,12 +44,40 @@ public class StorageService {
         return (ArrayList<Storage>) generalDao.listAll();
     }
 
-    public void delete(long id) throws BadRequestException {
+    public String delete(long id) throws BadRequestException {
         Storage storage = (Storage) generalDao.getById(id);
         if (storage == null) {
             throw new BadRequestException("Storage with id : " + id + " not found in DB");
         }
         generalDao.remove(id);
+        return "Storage id = " + id + " was  deleted";
+    }
+
+    public String gerAllStorages() {
+        List<Storage> storageList = generalDao.listAll();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Storage storage : storageList) {
+            stringBuilder.append(storage.toString());
+        }
+        return stringBuilder.toString();
+    }
+
+    public Storage update(Storage currentStorage) throws BadRequestException {
+        if (checkIdIsExist(currentStorage.getId())) {
+            return (Storage) generalDao.update(currentStorage);
+        }
+        throw new BadRequestException("Storage with id : " + currentStorage.getId() + " not found in DB");
+    }
+
+    private boolean checkIdIsExist(Long id) {
+        List<Storage> storageList = getAllStorages();
+
+        for (Storage storage : storageList) {
+            if (storage.getId() == id) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

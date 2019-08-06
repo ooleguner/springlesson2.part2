@@ -3,7 +3,7 @@ package lesson3_HW.beans;
 import org.springframework.context.annotation.Bean;
 
 import javax.persistence.*;
-import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Table(name = "STORAGE")
@@ -12,15 +12,16 @@ public class Storage {
     private String formatsSupported;
     private String storageCountry;
     private long storageSize;
-
+    private List<File> files;
 
     public Storage() {
     }
 
-    public Storage(String formatsSupported, String storageCountry, long storageSize) {
+    public Storage(String formatsSupported, String storageCountry, long storageSize, List<File> files) {
         this.formatsSupported = formatsSupported;
         this.storageCountry = storageCountry;
         this.storageSize = storageSize;
+        this.files = files;
     }
 
     @Id
@@ -60,6 +61,15 @@ public class Storage {
 
     public void setStorageSize(long storageSize) {
         this.storageSize = storageSize;
+    }
+
+    @OneToMany
+    public List<File> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<File> files) {
+        this.files = files;
     }
 
     @Override
