@@ -25,4 +25,12 @@ public class StorageController {
     public List<Storage> getAll(){
         return storageService.getAllStorages();
     }
+
+    public void delete(long id) throws ObjectPersistException {
+        storageService.delete(id);
+    }
+
+    public Storage update (Storage storage) throws ObjectPersistException {
+        return storageService.update(storage);
+    }
 }

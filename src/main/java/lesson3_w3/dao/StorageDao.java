@@ -16,28 +16,11 @@ import java.util.List;
  */
 public class StorageDao implements GeneralDao<Storage> {
 
-     SessionFactory sessionFactory;
-
-    public  SessionFactory createSessionFactory() {
-        if (sessionFactory != null){
-            return sessionFactory;
-        }
-        sessionFactory= new Configuration().configure().buildSessionFactory();
-        return  sessionFactory;
-    }
-
-    public  void closeSessionFactory (){
-        sessionFactory.close();
-    }
-
 
     @Override
     public Storage save(Storage storage) {
-        System.out.println("1");
         Transaction transaction=null;
-        System.out.println("2");
-        try(Session session = createSessionFactory().openSession()){
-            System.out.println(session.toString());
+        try(Session session = SessionFactoryBuilder.createSessionFactory().openSession()){
             transaction=session.beginTransaction();
             session.save(storage);
             transaction.commit();
@@ -52,7 +35,7 @@ public class StorageDao implements GeneralDao<Storage> {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Storage storage) {
 
     }
 
@@ -92,5 +75,10 @@ public class StorageDao implements GeneralDao<Storage> {
             }
         }
         return storages;
+    }
+
+    @Override
+    public int updateList(List<Storage> files) {
+        return 0;
     }
 }

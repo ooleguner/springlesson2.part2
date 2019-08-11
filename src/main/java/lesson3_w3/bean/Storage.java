@@ -75,4 +75,15 @@ Unable to evaluate the expression Method threw 'org.hibernate.LazyInitialization
     public void setStorageSize(long storageSize) {
         this.storageSize = storageSize;
     }
+
+    @Override
+    public String toString() {
+        return "Storage{" +
+                "id=" + id +
+                ", formatsSupported='" + formatsSupported + '\'' +
+                ", storageCountry='" + storageCountry + '\'' +
+                ", storageSize=" + storageSize +
+                ", files=" + files +
+                '}';
+    }
 }

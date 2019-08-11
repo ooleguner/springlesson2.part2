@@ -21,28 +21,79 @@ public class FileDao implements GeneralDao<File> {
             transaction.commit();
             System.out.println("File " + file.toString() + "save in DB");
         } catch (HibernateException e) {
+            System.out.println("*** Wrong during save File" + file.toString() + "***");
+            System.out.println(e.getMessage());
             if (transaction != null) {
                 transaction.rollback();
             }
-            System.out.println("*** Wrong during save File" + file.toString() + "***");
-            System.out.println(e.getMessage());
         }
         return file;
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(File file) {
+        Transaction transaction = null;
+        try (Session session = SessionFactoryBuilder.createSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.delete(file);
+            transaction.commit();
+        } catch (HibernateException e) {
+            System.out.println("Delete() Exception. File with id : "+ file.getId()+ "  was not deleted. ");
 
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
     }
 
     @Override
-    public File update(File object) {
-        return null;
+    public File update(File file) {
+        Transaction transaction = null;
+        try (Session session = SessionFactoryBuilder.createSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.update(file);
+            transaction.commit();
+        } catch (HibernateException e) {
+            System.out.println("Update() Exception. File with  id " + file.getId() + " was not updated. ");
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return file;
     }
+
+    public int updateList(List<File> files) {
+        Transaction transaction = null;
+        try (Session session = SessionFactoryBuilder.createSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            for (File file : files) {
+                session.update(file);
+            }
+            transaction.commit();
+        } catch (HibernateException e) {
+            System.out.println("TransferAll() Exception. Files was not transfered. ");
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return files.size();
+    }
+
 
     @Override
     public File findById(long id) {
-        return null;
+        Transaction transaction = null;
+        File file = null;
+        try (Session session = SessionFactoryBuilder.createSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            file = session.get(File.class, id);
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return file;
     }
 
     @Override
@@ -51,7 +102,9 @@ public class FileDao implements GeneralDao<File> {
         List<File> files = null;
         try (Session session = SessionFactoryBuilder.createSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            files = session.createSQLQuery("SELECT * FROM FILES").addEntity(File.class).list();
+            files = session.createSQLQuery("SELECT * FROM FILES")
+                    .addEntity(File.class)
+                    .list();
             transaction.commit();
         } catch (HibernateException e) {
             if (transaction != null) {
@@ -60,4 +113,6 @@ public class FileDao implements GeneralDao<File> {
         }
         return files;
     }
+
+
 }

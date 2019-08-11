@@ -68,6 +68,25 @@ public class File {
         this.storage = storage;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        File file = (File) o;
+
+        if (size != file.size) return false;
+        if (name != null ? !name.equals(file.name) : file.name != null) return false;
+        return format != null ? format.equals(file.format) : file.format == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (format != null ? format.hashCode() : 0);
+        result = 31 * result + (int) (size ^ (size >>> 32));
+        return result;
+    }
 
     @Override
     public String toString() {

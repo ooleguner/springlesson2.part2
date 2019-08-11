@@ -15,9 +15,9 @@ public class StorageService {
     GeneralDao<Storage> generalDao = new StorageDao();
 
     public Storage save(Storage storage) throws ObjectPersistException {
-//       if (checkIfStorageIsPersist(storage)){
-//           throw new ObjectPersistException("Storage " + storage.toString() + "is already persist in DB");
-//       }
+       if (checkIfStorageIsPersist(storage)){
+           throw new ObjectPersistException("Storage " + storage.toString() + "is already persist in DB");
+       }
         return generalDao.save(storage);
     }
 
@@ -40,5 +40,21 @@ public class StorageService {
            throw new ObjectPersistException("Storage with id " + id + " not present in DB.");
        }
        return storage;
+    }
+
+    public void delete(long id) throws ObjectPersistException {
+        Storage storage = generalDao.findById(id);
+        if (storage == null){
+            throw new ObjectPersistException("Storage with id "+ id + " not present in DB");
+        }
+        generalDao.delete(storage);
+        System.out.println("Storage with  id " + id + " was deleted.");
+    }
+
+    public Storage update(Storage storage) throws ObjectPersistException {
+        if (checkIfStorageIsPersist(storage)) {
+            throw new ObjectPersistException("Storage " + storage.toString() + " is already persist ib BD.");
+        }
+        return generalDao.update(storage);
     }
 }

@@ -2,12 +2,10 @@ package lesson3_w3;
 
 import lesson3_w3.bean.File;
 import lesson3_w3.bean.Storage;
+import lesson3_w3.controller.FileController;
 import lesson3_w3.controller.StorageController;
 import lesson3_w3.exceptions.ObjectPersistException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+import lesson3_w3.exceptions.ConditionException;
 
 import java.util.List;
 
@@ -15,7 +13,7 @@ import java.util.List;
  * Created by oleg on 10.08.2019.
  */
 public class Main {
-    public static void main(String[] args) throws ObjectPersistException {
+    public static void main(String[] args) throws ObjectPersistException, ConditionException {
 //        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 //        Session session = sessionFactory.openSession();
 //        Transaction transaction = session.beginTransaction();
@@ -47,13 +45,61 @@ public class Main {
  //       session.save(file2);
 
         StorageController storageController = new StorageController();
-        Storage storage = storageController.findById(453L);
+        FileController fileController = new FileController();
+//        Storage storage = storageController.findById(453L);
 
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++");
-        List<File> files = storage.getFiles();
-        for (File file : files) {
-            System.out.println(file.toString());
+        System.out.println("+++++++++ LIST OF FILES IN STORAGE ++++++++++++++++++++++++++");
+//        List<File> files = storage.getFiles();
+//        for (File file : files) {
+//            System.out.println(file.toString());
+//        }
+
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+//        File file = new File();
+//        file.setFormat("jpg");
+//        file.setSize(160);
+//        file.setName("K6k666i");
+//        file.setStorage(storage);
+//        fileController.save(file);
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+//        fileController.delete(960);
+//        fileController.delete(961);
+//        fileController.delete(963);
+//        fileController.delete(964);
+
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");
+
+//        File file = fileController.findById(960L);
+//        file.setName("Kitgki");
+//        fileController.update(file);
+
+//        File file = fileController.findById(956L);
+//        Storage storage1 = storageController.findById(453L);
+//
+//        fileController.delete(storage1,file);
+
+        Storage storage = storageController.findById(452);
+        for (File file : storage.getFiles()){
+            System.out.println(file);
         }
+        System.out.println("Size storage " + storage.getFiles().size());
+
+        System.out.println("+++++++++Transfer  +++++++++++++++++++");
+//
+//        fileController.transferAll(storageController.findById(452L),storageController.findById(453L));
+//        System.out.println("++++all ok");
+
+        fileController.transferFile(storageController.findById(452L), storageController.findById(453L), 959);
+
+
+
+        storage = storageController.findById(452);
+        for (File file : storage.getFiles()){
+            System.out.println(file);
+        }
+        System.out.println("Size storage " + storage.getFiles().size());
 
     }
 }
