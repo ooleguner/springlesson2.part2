@@ -6,7 +6,12 @@
 
     <context:annotation-config/>
 
-    <context:component-scan base-package="lesson3_HW"/>
+    <context:component-scan base-package="lesson3_w3"/>
+
+
+    <bean id ="fileService" class="lesson3_w3.service.FileService"/>
+
+    <bean id ="storageService" class="lesson3_w3.service.StorageService"/>
 
     <!--<bean id="storage_1" class="lesson3_HW.beans.Storage">-->
         <!--<constructor-arg name="formatsSupported" value="doc"/>-->
@@ -14,22 +19,22 @@
         <!--<constructor-arg name="storageSize" value="340"/>-->
     <!--</bean>-->
 
-    <bean id="storageDaoImpl" class="lesson3_HW.dao.StorageDaoImpl"/>
-    <bean id="fileDaoImpl" class="lesson3_HW.dao.FileDaoImpl"/>
+    <!--<bean id="storageDaoImpl" class="lesson3_HW.dao.StorageDaoImpl"/>-->
+    <!--<bean id="fileDaoImpl" class="lesson3_HW.dao.FileDaoImpl"/>-->
 
-    <bean id="storageService" class="lesson3_HW.service.StorageService">
-        <constructor-arg ref="storageDaoImpl"/>
-    </bean>
-    <bean id="fileService" class="lesson3_HW.service.FileService">
-        <constructor-arg ref="fileDaoImpl"/>
-    </bean>
+    <!--<bean id="storageService" class="lesson3_HW.service.StorageService">-->
+        <!--<constructor-arg ref="storageDaoImpl"/>-->
+    <!--</bean>-->
+    <!--<bean id="fileService" class="lesson3_HW.service.FileService">-->
+        <!--<constructor-arg ref="fileDaoImpl"/>-->
+    <!--</bean>-->
 
-    <bean id="storageController" class="lesson3_HW.controller.StorageController">
-        <constructor-arg ref="storageService"/>
-    </bean>
-    <bean id="fileController" class="lesson3_HW.controller.FileController">
-        <constructor-arg ref="fileService"/>
-    </bean>
+    <!--<bean id="storageController" class="lesson3_HW.controller.StorageController">-->
+        <!--<constructor-arg ref="storageService"/>-->
+    <!--</bean>-->
+    <!--<bean id="fileController" class="lesson3_HW.controller.FileController">-->
+        <!--<constructor-arg ref="fileService"/>-->
+    <!--</bean>-->
 
 
 

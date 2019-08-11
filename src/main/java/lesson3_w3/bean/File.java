@@ -28,6 +28,12 @@ public class File {
     public File() {
     }
 
+    public File(String name, String format, long size) {
+        this.name = name;
+        this.format = format;
+        this.size = size;
+    }
+
     public long getId() {
         return id;
     }
@@ -95,7 +101,6 @@ public class File {
                 ", name='" + name + '\'' +
                 ", format='" + format + '\'' +
                 ", size=" + size +
-                ", storage=" + storage.getId() +
-                '}';
+                ", storage=" + (storage!=null ? storage.getId() : 0)  + "}";
     }
 }

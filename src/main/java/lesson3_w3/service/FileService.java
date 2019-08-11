@@ -16,14 +16,19 @@ public class FileService {
 
     GeneralDao<File> generalDao = new FileDao();
 
+// тут убрал проверки на ограничения файла по хранилищу  ибо создаю файл без хранилища а уже когда
+// добавляю его в хранилище put(File file, Storage storage) то тода проверяю на ограничения предоставленные
+// хранилищем к файлу
 
-    public File save(File file) throws ObjectPersistException, ConditionException {
+    public File save(File file) throws ConditionException {
+        /*
         if (checkIfFileIsPersist(file, file.getStorage())) {
             throw new ObjectPersistException("File " + file.toString() + " is already persist ib BD.");
         }
-        checkFormatSupported(file, file.getStorage());
+                checkFormatSupported(file, file.getStorage());
+                checkFreeSizeStorage(file.getSize(), file.getStorage());
+        */
         checkLenghName(file.getName());
-        checkFreeSizeStorage(file.getSize(), file.getStorage());
         return generalDao.save(file);
     }
 
@@ -116,7 +121,11 @@ public class FileService {
         return generalDao.update(file);
     }
 
-    public void deleteFromStorage(Storage storage, File file) {
+    public void deleteFromStorage(Storage storage, File file) throws ObjectPersistException {
+
+        if (!checkIfFileIsPersist(file,storage)){
+            throw new ObjectPersistException("File  id "+ file.getId() + " was not found in Storage id " + storage.getId());
+        }
         file.setStorage(null);
         generalDao.update(file);
     }
