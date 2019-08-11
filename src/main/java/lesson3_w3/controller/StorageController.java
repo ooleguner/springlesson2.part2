@@ -4,6 +4,7 @@ package lesson3_w3.controller;
 import lesson3_w3.bean.Storage;
 import lesson3_w3.exceptions.ObjectPersistException;
 import lesson3_w3.service.StorageService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -12,7 +13,8 @@ import java.util.List;
  */
 public class StorageController {
 
-    StorageService storageService = new StorageService();
+    @Autowired
+    StorageService storageService;
 
     public Storage save(Storage storage) throws ObjectPersistException {
         return storageService.save(storage);
@@ -22,7 +24,7 @@ public class StorageController {
         return storageService.findById(l);
     }
 
-    public List<Storage> getAll(){
+    public List<Storage> getAll() {
         return storageService.getAllStorages();
     }
 
@@ -30,7 +32,7 @@ public class StorageController {
         storageService.delete(id);
     }
 
-    public Storage update (Storage storage) throws ObjectPersistException {
+    public Storage update(Storage storage) throws ObjectPersistException {
         return storageService.update(storage);
     }
 }

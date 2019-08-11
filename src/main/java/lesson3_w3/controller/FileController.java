@@ -2,7 +2,6 @@ package lesson3_w3.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lesson2_2.model.Item;
 import lesson3_w3.bean.File;
 import lesson3_w3.bean.Storage;
 import lesson3_w3.exceptions.ObjectPersistException;
@@ -10,13 +9,10 @@ import lesson3_w3.exceptions.ConditionException;
 import lesson3_w3.service.FileService;
 import lesson3_w3.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.persistence.Column;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -75,7 +71,11 @@ public class FileController {
     @RequestMapping(method = RequestMethod.GET, value = "/getFile", produces = "text/plain")
     public @ResponseBody
     String findById(HttpServletRequest request) {
-        return fileService.findById(Integer.parseInt(request.getParameter("id"))).toString();
+        try {
+            return fileService.findById(Integer.parseInt(request.getParameter("id"))).toString();
+        } catch (ObjectPersistException e) {
+           return "File with id : "+ Integer.parseInt(request.getParameter("id")) + "not found in System." ;
+        }
     }
 
     /*
@@ -89,9 +89,9 @@ public class FileController {
             File file = fileService.findById(Integer.parseInt(req.getParameter("idFile")));
             return "File " + fileService.put(storage, file) + "is adding to storage with id " + req.getParameter("idStorage");
         } catch (ObjectPersistException e) {
-            return e.getMessage();
+            return "Exception while putting  file id: " + Integer.parseInt(req.getParameter("idFile")) + " to storage id: "+ Integer.parseInt(req.getParameter("idStorage")) +" by reason : " + e.getMessage();
         } catch (ConditionException e) {
-            return e.getMessage();
+            return "Exception puttin  file id: " + Integer.parseInt(req.getParameter("idFile")) + " to storage id: "+ Integer.parseInt(req.getParameter("idStorage")) +" by reason : " + e.getMessage();
         }
     }
 
@@ -124,15 +124,29 @@ public class FileController {
             fileService.transferAll(storageFrom, storageTo);
             return " All files from Storage id: " + storageFrom.getId() + " was transfered to Storage id: " + storageTo.getId();
         } catch (ObjectPersistException e) {
-
             return "TransferAll() not finished by reason : " + e.getMessage();
         } catch (ConditionException e) {
             return "TransferAll() not finished by reason : " + e.getMessage();
         }
     }
 
-    public void transferFile(Storage storageFrom, Storage storageTo, long id) throws ObjectPersistException, ConditionException {
-        fileService.transferFile(storageFrom, storageTo, id);
+    /*
+             http://localhost:8080/transferFile?idStorageFrom=452&idStorageTo=453&id=965
+    */
+    @RequestMapping(method = RequestMethod.PUT, value = "/transferFile", produces = "text/plain")
+    public @ResponseBody String transferFile(HttpServletRequest req) {
+
+        try {
+            Storage storageFrom = storageService.findById(Integer.parseInt(req.getParameter("idStorageFrom")));
+            Storage storageTo = storageService.findById(Integer.parseInt(req.getParameter("idStorageTo")));
+            Long id = Long.parseLong(req.getParameter("id"));
+            fileService.transferFile(storageFrom, storageTo, id);
+            return " File id: " + id + " was transfered  from Storage id: " + storageFrom.getId() + " to Storage id: " + storageTo.getId();
+        } catch (ObjectPersistException e) {
+            return "TransferFile() not finished by reason : " + e.getMessage();
+        } catch (ConditionException e) {
+            return "TransferFile() not finished by reason : " + e.getMessage();
+        }
     }
 
 }

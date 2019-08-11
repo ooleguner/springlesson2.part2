@@ -8,10 +8,16 @@
 
     <context:component-scan base-package="lesson3_w3"/>
 
+    <bean id ="generalFileDao" class="lesson3_w3.dao.FileDao"/>
+    <bean id ="generalStorageDao" class="lesson3_w3.dao.StorageDao"/>
 
-    <bean id ="fileService" class="lesson3_w3.service.FileService"/>
+    <bean id ="fileService" class="lesson3_w3.service.FileService">
+        <constructor-arg ref="generalFileDao"/>
+    </bean>
 
-    <bean id ="storageService" class="lesson3_w3.service.StorageService"/>
+    <bean id ="storageService" class="lesson3_w3.service.StorageService">
+        <constructor-arg ref="generalStorageDao"/>
+    </bean>
 
     <!--<bean id="storage_1" class="lesson3_HW.beans.Storage">-->
         <!--<constructor-arg name="formatsSupported" value="doc"/>-->

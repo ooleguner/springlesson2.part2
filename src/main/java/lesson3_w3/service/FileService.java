@@ -6,6 +6,7 @@ import lesson3_w3.dao.FileDao;
 import lesson3_w3.dao.GeneralDao;
 import lesson3_w3.exceptions.ObjectPersistException;
 import lesson3_w3.exceptions.ConditionException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -13,8 +14,12 @@ import java.util.List;
  * Created by oleg on 08.08.2019.
  */
 public class FileService {
+    GeneralDao<File> generalDao;
 
-    GeneralDao<File> generalDao = new FileDao();
+    @Autowired
+    public FileService(GeneralDao<File> generalDao) {
+        this.generalDao = generalDao;
+    }
 
 // тут убрал проверки на ограничения файла по хранилищу  ибо создаю файл без хранилища а уже когда
 // добавляю его в хранилище put(File file, Storage storage) то тода проверяю на ограничения предоставленные
@@ -47,7 +52,7 @@ public class FileService {
                 fillSpace = fillSpace + file.getSize();
             }
         }
-        return storage.getStorageSize()- fillSpace;
+        return storage.getStorageSize() - fillSpace;
     }
 
     private void checkLenghName(String name) throws ConditionException {
@@ -89,10 +94,10 @@ public class FileService {
 
     public void delete(long id) throws ObjectPersistException {
         File file = generalDao.findById(id);
-        if (file == null){
-            throw new ObjectPersistException("File with id "+ id + " not present in DB");
+        if (file == null) {
+            throw new ObjectPersistException("File with id " + id + " not present in DB");
         }
-            generalDao.delete(file);
+        generalDao.delete(file);
         System.out.println("File id " + id + " was deleted.");
     }
 
@@ -100,18 +105,18 @@ public class FileService {
         if (checkIfFileIsPersist(file, file.getStorage())) {
             throw new ObjectPersistException("File " + file.toString() + " is already persist ib BD.");
         }
-        checkFormatSupported(file,file.getStorage());
+        checkFormatSupported(file, file.getStorage());
         checkLenghName(file.getName());
         checkFreeSizeStorage(file.getSize(), file.getStorage());
-       return generalDao.update(file);
+        return generalDao.update(file);
     }
 
-    public File findById(long id){
+    public File findById(long id) throws ObjectPersistException {
         return generalDao.findById(id);
     }
 
     public File put(Storage storage, File file) throws ObjectPersistException, ConditionException {
-        if (checkIfFileIsPersist(file,storage)) {
+        if (checkIfFileIsPersist(file, storage)) {
             throw new ObjectPersistException("File " + file.toString() + " is already persist ib storage " + storage.toString());
         }
         checkFormatSupported(file, storage);
@@ -123,8 +128,8 @@ public class FileService {
 
     public void deleteFromStorage(Storage storage, File file) throws ObjectPersistException {
 
-        if (!checkIfFileIsPersist(file,storage)){
-            throw new ObjectPersistException("File  id "+ file.getId() + " was not found in Storage id " + storage.getId());
+        if (!checkIfFileIsPersist(file, storage)) {
+            throw new ObjectPersistException("File  id " + file.getId() + " was not found in Storage id " + storage.getId());
         }
         file.setStorage(null);
         generalDao.update(file);
@@ -132,26 +137,26 @@ public class FileService {
 
     public int transferAll(Storage storageFrom, Storage storageTo) throws ConditionException, ObjectPersistException {
         List<File> filesStorageFrom = storageFrom.getFiles();
-        long sizeOfFiles=0;
-        for(File file:filesStorageFrom){
-            if (checkIfFileIsPersist(file,storageTo)) {
+        long sizeOfFiles = 0;
+        for (File file : filesStorageFrom) {
+            if (checkIfFileIsPersist(file, storageTo)) {
                 throw new ObjectPersistException("File " + file.toString() + " is already persist ib storage " + storageTo.toString());
             }
             checkFormatSupported(file, storageTo);
             checkLenghName(file.getName());
             sizeOfFiles = sizeOfFiles + file.getSize();
         }
-        checkFreeSizeStorage(sizeOfFiles,storageTo);
+        checkFreeSizeStorage(sizeOfFiles, storageTo);
 
-        for (File file : storageFrom.getFiles()){
+        for (File file : storageFrom.getFiles()) {
             file.setStorage(storageTo);
         }
 
-      return generalDao.updateList(filesStorageFrom);
+        return generalDao.updateList(filesStorageFrom);
     }
 
     public void transferFile(Storage storageFrom, Storage storageTo, long id) throws ObjectPersistException, ConditionException {
         File file = findById(id);
-        put(storageTo,file);
+        put(storageTo, file);
     }
 }

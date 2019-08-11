@@ -1,9 +1,11 @@
 package lesson3_w3.service;
 
+import lesson3_w3.bean.File;
 import lesson3_w3.bean.Storage;
 import lesson3_w3.dao.GeneralDao;
 import lesson3_w3.dao.StorageDao;
 import lesson3_w3.exceptions.ObjectPersistException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Set;
@@ -12,7 +14,13 @@ import java.util.Set;
  * Created by oleg on 08.08.2019.
  */
 public class StorageService {
-    GeneralDao<Storage> generalDao = new StorageDao();
+
+    GeneralDao<Storage> generalDao;
+
+    @Autowired
+    public StorageService(GeneralDao<Storage> generalDao) {
+        this.generalDao = generalDao;
+    }
 
     public Storage save(Storage storage) throws ObjectPersistException {
        if (checkIfStorageIsPersist(storage)){

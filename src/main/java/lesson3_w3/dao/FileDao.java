@@ -1,6 +1,7 @@
 package lesson3_w3.dao;
 
 import lesson3_w3.bean.File;
+import lesson3_w3.exceptions.ObjectPersistException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -38,7 +39,7 @@ public class FileDao implements GeneralDao<File> {
             session.delete(file);
             transaction.commit();
         } catch (HibernateException e) {
-            System.out.println("Delete() Exception. File with id : "+ file.getId()+ "  was not deleted. ");
+            System.out.println("Delete() Exception. File with id : " + file.getId() + "  was not deleted. ");
 
             if (transaction != null) {
                 transaction.rollback();
@@ -81,7 +82,7 @@ public class FileDao implements GeneralDao<File> {
 
 
     @Override
-    public File findById(long id) {
+    public File findById(long id) throws ObjectPersistException {
         Transaction transaction = null;
         File file = null;
         try (Session session = SessionFactoryBuilder.createSessionFactory().openSession()) {
@@ -93,7 +94,10 @@ public class FileDao implements GeneralDao<File> {
                 transaction.rollback();
             }
         }
-        return file;
+        if (file != null) {
+            return file;
+        }
+        throw new ObjectPersistException("File with id: " + id + " not presrnt in System");
     }
 
     @Override
