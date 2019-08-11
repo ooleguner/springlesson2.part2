@@ -45,26 +45,6 @@ public class FileController {
         }
     }
 
-    private File mappingFile(HttpServletRequest req) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String line;
-        BufferedReader reader = req.getReader();
-        while ((line = reader.readLine()) != null) {
-            stringBuilder.append(line);
-        }
-        return objectMapper.readValue(stringBuilder.toString(), File.class);
-    }
-
-    // delete from system
-    public void delete(long id) throws ObjectPersistException {
-        fileService.delete(id);
-    }
-
-    public File update(File file) throws ObjectPersistException, ConditionException {
-        return fileService.update(file);
-    }
-
     /*
          http://localhost:8080/getFile?id=1000
     */
@@ -74,7 +54,7 @@ public class FileController {
         try {
             return fileService.findById(Integer.parseInt(request.getParameter("id"))).toString();
         } catch (ObjectPersistException e) {
-           return "File with id : "+ Integer.parseInt(request.getParameter("id")) + "not found in System." ;
+            return "File with id : "+ Integer.parseInt(request.getParameter("id")) + "not found in System." ;
         }
     }
 
@@ -147,6 +127,26 @@ public class FileController {
         } catch (ConditionException e) {
             return "TransferFile() not finished by reason : " + e.getMessage();
         }
+    }
+
+    // delete from system
+    public void delete(long id) throws ObjectPersistException {
+        fileService.delete(id);
+    }
+
+    public File update(File file) throws ObjectPersistException, ConditionException {
+        return fileService.update(file);
+    }
+
+    private File mappingFile(HttpServletRequest req) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String line;
+        BufferedReader reader = req.getReader();
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        return objectMapper.readValue(stringBuilder.toString(), File.class);
     }
 
 }
