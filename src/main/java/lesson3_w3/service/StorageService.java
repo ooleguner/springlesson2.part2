@@ -15,22 +15,22 @@ import java.util.Set;
  */
 public class StorageService {
 
-    GeneralDao<Storage> generalDao;
+   StorageDao storageDao;
 
     @Autowired
-    public StorageService(GeneralDao<Storage> generalDao) {
-        this.generalDao = generalDao;
+    public StorageService(StorageDao storageDao) {
+        this.storageDao = storageDao;
     }
 
     public Storage save(Storage storage) throws ObjectPersistException {
        if (checkIfStorageIsPersist(storage)){
            throw new ObjectPersistException("Storage " + storage.toString() + "is already persist in DB");
        }
-        return generalDao.save(storage);
+        return storageDao.save(storage);
     }
 
     public List<Storage> getAllStorages(){
-      return generalDao.getAll();
+      return storageDao.getAll();
     }
 
     private boolean checkIfStorageIsPersist(Storage storage) {
@@ -43,7 +43,7 @@ public class StorageService {
     }
 
     public Storage findById(long id) throws ObjectPersistException {
-       Storage storage = generalDao.findById(id);
+       Storage storage = storageDao.findById(id);
        if (storage==null){
            throw new ObjectPersistException("Storage with id " + id + " not present in DB.");
        }
@@ -51,11 +51,11 @@ public class StorageService {
     }
 
     public void delete(long id) throws ObjectPersistException {
-        Storage storage = generalDao.findById(id);
+        Storage storage = storageDao.findById(id);
         if (storage == null){
             throw new ObjectPersistException("Storage with id "+ id + " not present in DB");
         }
-        generalDao.delete(storage);
+        storageDao.delete(storage);
         System.out.println("Storage with  id " + id + " was deleted.");
     }
 
@@ -63,6 +63,6 @@ public class StorageService {
         if (checkIfStorageIsPersist(storage)) {
             throw new ObjectPersistException("Storage " + storage.toString() + " is already persist ib BD.");
         }
-        return generalDao.update(storage);
+        return storageDao.update(storage);
     }
 }

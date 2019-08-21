@@ -8,15 +8,15 @@
 
     <context:component-scan base-package="lesson3_w3"/>
 
-    <bean id ="generalFileDao" class="lesson3_w3.dao.FileDao"/>
-    <bean id ="generalStorageDao" class="lesson3_w3.dao.StorageDao"/>
+    <bean id ="fileDao" class="lesson3_w3.dao.FileDao"/>
+    <bean id ="storageDao" class="lesson3_w3.dao.StorageDao"/>
 
     <bean id ="fileService" class="lesson3_w3.service.FileService">
-        <constructor-arg ref="generalFileDao"/>
+        <constructor-arg ref="fileDao"/>
     </bean>
 
     <bean id ="storageService" class="lesson3_w3.service.StorageService">
-        <constructor-arg ref="generalStorageDao"/>
+        <constructor-arg ref="storageDao"/>
     </bean>
 
     <!--<bean id="storage_1" class="lesson3_HW.beans.Storage">-->

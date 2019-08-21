@@ -1,12 +1,17 @@
 package lesson3_w3.dao;
 
 import lesson3_w3.bean.File;
+import lesson3_w3.bean.Storage;
 import lesson3_w3.exceptions.ObjectPersistException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
+import java.sql.PreparedStatement;
 import java.util.List;
+
+import static oracle.jrockit.jfr.events.Bits.longValue;
 
 /**
  * Created by oleg on 08.08.2019.
@@ -119,4 +124,40 @@ public class FileDao implements GeneralDao<File> {
     }
 
 
+    public long getFillSpace(long id) {
+        Transaction transaction = null;
+        try (Session session = SessionFactoryBuilder.createSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Query query = session.createSQLQuery("Select SUM(FILE_SIZE) from FILES WHERE STORAGE_ID = ?");
+            query.setParameter(0, id);
+            long res = longValue(query.uniqueResult());
+            transaction.commit();
+            return res;
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return 0;
+    }
+
+    public boolean checkIfFileIsPersist(long file_id, long storage_id) {
+        Transaction transaction = null;
+        File result = null;
+        try (Session session = SessionFactoryBuilder.createSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Query query = session.createSQLQuery("SELECT * FROM  FILES WHERE ID_FILE = :idFile AND STORAGE_ID = :idStorage");
+            query.setParameter("idFile", file_id);
+            query.setParameter("idStorage", storage_id);
+            if (query.getResultList().isEmpty()) {
+                return false;
+            }
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        }
+        return true;
+    }
 }

@@ -9,7 +9,11 @@ import lesson3_w3.exceptions.ConditionException;
 import lesson3_w3.service.FileService;
 import lesson3_w3.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -46,15 +50,15 @@ public class FileController {
     }
 
     /*
-         http://localhost:8080/getFile?id=1000
-    */
+         http://localhost:8080/getFile?id=952
+*/
     @RequestMapping(method = RequestMethod.GET, value = "/getFile", produces = "text/plain")
     public @ResponseBody
     String findById(HttpServletRequest request) {
         try {
             return fileService.findById(Integer.parseInt(request.getParameter("id"))).toString();
         } catch (ObjectPersistException e) {
-            return "File with id : "+ Integer.parseInt(request.getParameter("id")) + "not found in System." ;
+            return "File with id : "+ Integer.parseInt(request.getParameter("id")) + " not found in System." ;
         }
     }
 

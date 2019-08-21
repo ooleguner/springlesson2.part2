@@ -28,6 +28,13 @@ public class File {
     public File() {
     }
 
+    public File(Long id, String name, String format, long size) {
+        this.id = id;
+        this.name = name;
+        this.format = format;
+        this.size = size;
+    }
+
     public File(String name, String format, long size) {
         this.name = name;
         this.format = format;
@@ -101,6 +108,6 @@ public class File {
                 ", name='" + name + '\'' +
                 ", format='" + format + '\'' +
                 ", size=" + size +
-                ", storage=" + (storage!=null ? storage.getId() : 0)  + "}";
+                ", storage=" + (storage != null ? storage.getId() : 0) + "}";
     }
 }
