@@ -10,12 +10,18 @@ import lesson3.dao.FileDao;
 import lesson3.dao.StorageDao;
 import lesson3.service.FileService;
 import lesson3.service.StorageService;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+//import org.springframework.jdbc.datasource.DriverManagerDataSource;
+//import org.springframework.orm.jpa.JpaTransactionManager;
+//import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+//import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Properties;
 
 @Configuration
 //@EnableJpaRepositories("lesson3.dao")
@@ -99,5 +105,30 @@ public class SpringConf {
     public StorageService storageService(){
         return new StorageService(storageDao());
     }
-
+/*
+    @Bean
+    public DriverManagerDataSource conferenceDataSource () {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+        return dataSource;
+    }
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
+        LocalContainerEntityManagerFactoryBean emFactory = new LocalContainerEntityManagerFactoryBean();
+        emFactory.setDataSource((conferenceDataSource()));
+        emFactory.setPersistenceProviderClass(HibernatePersistenceProvider.class);
+        emFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        Properties jpaProperties = new Properties();
+        jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.OracleDialect");
+        emFactory.setJpaProperties(jpaProperties);
+        emFactory.setPackagesToScan(getClass().getPackage().getName());
+        return emFactory;
+    }
+    @Bean
+    public JpaTransactionManager transactionManager() {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        return transactionManager;
+    }
+*/
 }
