@@ -6,6 +6,10 @@ import lesson2_1.Service;
 import lesson2_1.Step;
 import lesson2_2.repository.ItemDao;
 import lesson2_2.service.ItemService;
+import lesson3.dao.FileDao;
+import lesson3.dao.StorageDao;
+import lesson3.service.FileService;
+import lesson3.service.StorageService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,14 +17,11 @@ import org.springframework.context.annotation.Configuration;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- * Created by oleg on 21.08.2019.
- */
-
-
 @Configuration
+//@EnableJpaRepositories("lesson3.dao")
 //@ComponentScan(basePackages = "lesson1.com")
-@ComponentScan(basePackages = "lesson2_2")
+//@ComponentScan(basePackages = "lesson2_1")
+@ComponentScan(basePackages = "lesson3")
 public class SpringConf {
     /*
         lesson1
@@ -70,10 +71,33 @@ public class SpringConf {
     public ItemService itemService() {
         return new ItemService();
     }
+
     @Bean
-    public ItemDao itemDao(){
+    public ItemDao itemDao() {
         return new ItemDao();
     }
 
+    /*
+            lesson3
+    */
+    @Bean
+    public FileDao fileDao(){
+        return new FileDao();
+    }
+
+    @Bean
+    public StorageDao storageDao(){
+        return new StorageDao();
+    }
+
+    @Bean
+    public FileService fileService() {
+        return new FileService(fileDao());
+    }
+
+    @Bean
+    public StorageService storageService(){
+        return new StorageService(storageDao());
+    }
 
 }
