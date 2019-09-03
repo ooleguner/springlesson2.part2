@@ -1,5 +1,6 @@
 package com;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lesson5.DAO;
 import com.lesson5.ItemController;
 import com.lesson5.ItemMapper;
@@ -45,6 +46,11 @@ public class AppConfig {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(emf);
         return transactionManager;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper(){
+        return new ObjectMapper();
     }
 
     @Bean
