@@ -1,5 +1,9 @@
 package com;
 
+import com.lesson5.DAO;
+import com.lesson5.ItemController;
+import com.lesson5.ItemMapper;
+import com.lesson5.ItemService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -17,18 +21,18 @@ import javax.persistence.EntityManagerFactory;
 public class AppConfig {
 
     @Bean
-    public  DriverManagerDataSource dataSource(){
+    public DriverManagerDataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
         dataSource.setUrl("jdbc:oracle:thin:@gromcode-lessons.cmbqecodcoqo.us-east-2.rds.amazonaws.com:1521:ORCL");
         dataSource.setUsername("main");
-        dataSource.setPassword("24390000");
+        dataSource.setPassword("");
         return dataSource;
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(){
-        LocalContainerEntityManagerFactoryBean en=new LocalContainerEntityManagerFactoryBean();
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
+        LocalContainerEntityManagerFactoryBean en = new LocalContainerEntityManagerFactoryBean();
         en.setDataSource(dataSource());
         en.setPackagesToScan(new String[]{"com"});
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -41,5 +45,25 @@ public class AppConfig {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(emf);
         return transactionManager;
+    }
+
+    @Bean
+    public DAO dao() {
+        return new DAO();
+    }
+
+    @Bean
+    public ItemController itemController() {
+        return new ItemController(itemService(), itemMapper());
+    }
+
+    @Bean
+    public ItemMapper itemMapper() {
+        return new ItemMapper();
+    }
+
+    @Bean
+    public ItemService itemService() {
+        return new ItemService(dao());
     }
 }
