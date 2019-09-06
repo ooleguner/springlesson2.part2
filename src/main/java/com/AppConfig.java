@@ -1,14 +1,22 @@
 package com;
 
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.lesson5.DAO;
+//import com.lesson5.ItemController;
+//import com.lesson5.ItemMapper;
+//import com.lesson5.ItemService;
+//import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+//import org.springframework.orm.jpa.JpaTransactionManager;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lesson5.DAO;
-import com.lesson5.ItemController;
-import com.lesson5.ItemMapper;
-import com.lesson5.ItemService;
+import com.lesson6.melpers.ItemMapper;
+import com.lesson6.controller.ItemController;
+import com.lesson6.repository.ItemDao;
+import com.lesson6.service.ItemService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -35,19 +43,54 @@ public class AppConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         LocalContainerEntityManagerFactoryBean en = new LocalContainerEntityManagerFactoryBean();
         en.setDataSource(dataSource());
-        en.setPackagesToScan(new String[]{"com"});
+        en.setPackagesToScan(new String[]{"com.lesson6"});
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         en.setJpaVendorAdapter(vendorAdapter);
         return en;
     }
 
+//    @Bean
+//    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+//        JpaTransactionManager transactionManager = new JpaTransactionManager();
+//        transactionManager.setEntityManagerFactory(emf);
+//        return transactionManager;
+//    }
+
     @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(emf);
-        return transactionManager;
+    public PlatformTransactionManager transactionManager(){
+        return new DataSourceTransactionManager(dataSource());
     }
 
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
+
+    @Bean
+    public ItemMapper itemMapper() {
+        return new ItemMapper();
+    }
+
+    @Bean
+    public ItemController itemController() {
+        return new ItemController(itemService(), itemMapper());
+    }
+
+    @Bean
+    public ItemService itemService() {
+        return new ItemService(dao());
+    }
+
+    @Bean
+    public ItemDao dao() {
+        return new ItemDao();
+    }
+
+//    @Bean
+//    public PlatformTransactionManager transactionManager(){
+//        return new DataSourceTransactionManager(dataSource());
+//    }
+    /*
     @Bean
     public ObjectMapper objectMapper(){
         return new ObjectMapper();
@@ -72,4 +115,7 @@ public class AppConfig {
     public ItemService itemService() {
         return new ItemService(dao());
     }
+    */
+
+
 }
