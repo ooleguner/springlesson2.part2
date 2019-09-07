@@ -33,8 +33,8 @@ public class ItemService {
 
     @Transactional
     private void checkIfItemExist(Item item) throws PersistException {
-        if (dao.checkIfItemExist(item.getDescription())) {
-            throw new PersistException("Item with description " + item.getDescription() + " is already present in DB.");
+        if (dao.checkIfItemExist(item.getName())) {
+            throw new PersistException("Item with name " + item.getName() + " is already present in DB.");
         }
     }
 
@@ -44,11 +44,7 @@ public class ItemService {
         dao.delete(id);
     }
     public Item findById(long id) throws PersistException {
- /*
-        for me test
-        System.out.println("Transaction is open? Service  " + TransactionSynchronizationManager.isActualTransactionActive());
 
- */
        Item item = dao.findById(id);
         if (item == null) {
             throw new PersistException("Item with id " + id + " not found in DB. ");
@@ -62,64 +58,8 @@ public class ItemService {
         return dao.update(item);
     }
 
+    @Transactional
+    public int deleteByName(String name) {
+       return dao.deleteByName(name);
+    }
 }
-/*
-    ItemDao dao;
-
-    @Autowired
-    public ItemService(ItemDao dao){
-        this.dao = dao;
-    }
-
-
-    List<Item> items;
-
-    public ArrayList<Item> getAllItems() throws HibernateException {
-        return dao.getAllItems();
-    }
-
-    public Item getByID(long id) throws HibernateException, ItemExistException {
-        if (checkIfIsExist(id)) {
-            return dao.getItemById(id);
-        }
-        throw new ItemExistException("Item with id : " + id + " is not present in base");
-    }
-
-    private boolean checkIfIsExist(Long id) throws HibernateException {
-        items = getAllItems();
-        for (Item itemFromDB : items) {
-            if (itemFromDB.getId().equals(id)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void delete(long id) throws HibernateException, ItemExistException {
-        if (!checkIfIsExist(id)) {
-            throw new ItemExistException("Item with id : " + id + " is not present in base");
-        }
-        dao.deleteItem(id);
-    }
-
-
-    public Item save(Item item)  {
-        items = getAllItems();
-        for (Item itemFromDB : items) {
-            if (itemFromDB.getName().equals(item.getName())) {
-                throw new ItemExistException("Item with name : " + item.getName() + " is  present in base. Try another name");
-            }
-        }
-       return dao.saveItem(item);
-    }
-
-
-    public Item update(Item item) throws HibernateException, ItemExistException {
-        if (checkIfIsExist(item.getId())) {
-            return dao.updateItem(item);
-        }
-        throw new ItemExistException("Item with id : " + item.getId() + " is not present in base");
-    }
-
-}
- */

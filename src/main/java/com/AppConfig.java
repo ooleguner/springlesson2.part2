@@ -1,13 +1,5 @@
 package com;
 
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.lesson5.DAO;
-//import com.lesson5.ItemController;
-//import com.lesson5.ItemMapper;
-//import com.lesson5.ItemService;
-//import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-//import org.springframework.orm.jpa.JpaTransactionManager;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lesson6.melpers.ItemMapper;
 import com.lesson6.controller.ItemController;
@@ -15,8 +7,8 @@ import com.lesson6.repository.ItemDao;
 import com.lesson6.service.ItemService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -49,16 +41,11 @@ public class AppConfig {
         return en;
     }
 
-//    @Bean
-//    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
-//        JpaTransactionManager transactionManager = new JpaTransactionManager();
-//        transactionManager.setEntityManagerFactory(emf);
-//        return transactionManager;
-//    }
-
     @Bean
-    public PlatformTransactionManager transactionManager(){
-        return new DataSourceTransactionManager(dataSource());
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(emf);
+        return transactionManager;
     }
 
     @Bean
@@ -86,10 +73,6 @@ public class AppConfig {
         return new ItemDao();
     }
 
-//    @Bean
-//    public PlatformTransactionManager transactionManager(){
-//        return new DataSourceTransactionManager(dataSource());
-//    }
     /*
     @Bean
     public ObjectMapper objectMapper(){
