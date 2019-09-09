@@ -15,9 +15,9 @@ import java.util.List;
 /**
  * Created by oleg on 14.07.2019.
  */
+
+@Transactional
 public class ItemService {
-
-
     ItemDao dao;
 
     @Autowired

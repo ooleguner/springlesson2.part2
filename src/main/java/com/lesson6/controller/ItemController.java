@@ -1,13 +1,12 @@
 package com.lesson6.controller;
 
 import com.lesson5.PersistException;
-import com.lesson6.melpers.ItemMapper;
+import com.lesson6.helpers.ItemMapper;
 import com.lesson6.model.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

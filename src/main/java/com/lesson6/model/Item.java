@@ -1,16 +1,11 @@
 package com.lesson6.model;
 
-import com.lesson6.melpers.LocalDateDeserializer;
-import com.lesson6.melpers.LocalDateSerializer;
+import com.lesson6.helpers.LocalDateDeserializer;
+import com.lesson6.helpers.LocalDateSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import javax.persistence.*;
 import java.time.LocalDate;
-
-/**
- * Created by oleg on 03.06.2019.
- */
 
 @Entity
 @Table(name = "ITEM")

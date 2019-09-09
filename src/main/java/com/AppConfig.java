@@ -1,10 +1,10 @@
 package com;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lesson6.melpers.ItemMapper;
-import com.lesson6.controller.ItemController;
-import com.lesson6.repository.ItemDao;
-import com.lesson6.service.ItemService;
+import com.lesson6_1.controller.PlaneController;
+import com.lesson6_1.helpers.GeneralMapper;
+import com.lesson6_1.repository.PlaneRepository;
+import com.lesson6_1.service.PlaneService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -35,7 +35,7 @@ public class AppConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         LocalContainerEntityManagerFactoryBean en = new LocalContainerEntityManagerFactoryBean();
         en.setDataSource(dataSource());
-        en.setPackagesToScan(new String[]{"com.lesson6"});
+        en.setPackagesToScan(new String[]{"com.lesson6_1"});
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         en.setJpaVendorAdapter(vendorAdapter);
         return en;
@@ -48,6 +48,35 @@ public class AppConfig {
         return transactionManager;
     }
 
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
+
+    @Bean
+    public GeneralMapper generalMapper() {
+        return new GeneralMapper();
+    }
+
+    @Bean
+    public PlaneController planeController(){
+        return new PlaneController(generalMapper(), planeService());
+    }
+
+    @Bean
+    public PlaneService planeService(){
+        return new PlaneService(planeRepository());
+    }
+
+    @Bean
+    public PlaneRepository planeRepository(){
+        return new PlaneRepository();
+    }
+}
+
+
+ /*
+    //_______________________LESSON6_________________________________
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
@@ -73,7 +102,8 @@ public class AppConfig {
         return new ItemDao();
     }
 
-    /*
+
+    //_______________________LESSON5_________________________________
     @Bean
     public ObjectMapper objectMapper(){
         return new ObjectMapper();
@@ -101,4 +131,4 @@ public class AppConfig {
     */
 
 
-}
+
