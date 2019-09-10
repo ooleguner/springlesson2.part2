@@ -15,18 +15,20 @@ import java.io.IOException;
 
 @Controller
 public class PlaneController {
+
     private GeneralMapper generalMapper;
     private PlaneService planeService;
-@Autowired
+
+    @Autowired
     public PlaneController(GeneralMapper generalMapper, PlaneService planeService) {
         this.generalMapper = generalMapper;
         this.planeService = planeService;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/save", produces = "text/plain")
-    public ResponseEntity<String > save (HttpServletRequest request){
+    public ResponseEntity<String> save(HttpServletRequest request) {
         try {
-            Plane plane= generalMapper.mappingObject(request,Plane.class);
+            Plane plane = generalMapper.mappingObject(request, Plane.class);
             return new ResponseEntity<String>(planeService.savePlane(plane).toString(), HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);

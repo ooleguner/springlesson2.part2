@@ -3,7 +3,9 @@ package com;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lesson6_1.controller.PlaneController;
 import com.lesson6_1.helpers.GeneralMapper;
+import com.lesson6_1.model.Plane;
 import com.lesson6_1.repository.PlaneRepository;
+import com.lesson6_1.repository.RepositoryInterface;
 import com.lesson6_1.service.PlaneService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -69,7 +71,7 @@ public class AppConfig {
     }
 
     @Bean
-    public PlaneRepository planeRepository(){
+    public RepositoryInterface<Plane> planeRepository(){
         return new PlaneRepository();
     }
 }
