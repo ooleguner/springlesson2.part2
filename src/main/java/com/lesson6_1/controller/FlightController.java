@@ -27,12 +27,6 @@ public class FlightController {
         this.flightService = flightService;
     }
 
-/*
-{"lastName":"Shevchenko",
-"nationality":"Ukr",
-"dateOfBirth":"1980-09-11",
-"passportCode":"123456789"}
-*/
     @RequestMapping(method = RequestMethod.POST, value = "/saveFlight", produces = "text/plain")
     public ResponseEntity<String> save(HttpServletRequest request) {
         try {
