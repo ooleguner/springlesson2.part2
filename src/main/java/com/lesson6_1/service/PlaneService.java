@@ -12,14 +12,14 @@ import javax.transaction.Transactional;
 @Transactional
 public class PlaneService {
 
-    RepositoryInterface planeRepository;
+    RepositoryInterface repositoryInterface;
 
     @Autowired
-    public PlaneService(RepositoryInterface planeRepository){
-        this.planeRepository = planeRepository;
+    public PlaneService(RepositoryInterface repositoryInterface){
+        this.repositoryInterface = repositoryInterface;
     }
 
     public Plane savePlane(Plane plane){
-      return (Plane) planeRepository.save(plane);
+      return (Plane) repositoryInterface.save(plane);
     }
 }

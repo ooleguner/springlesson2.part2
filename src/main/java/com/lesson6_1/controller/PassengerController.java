@@ -1,7 +1,9 @@
 package com.lesson6_1.controller;
 
 import com.lesson6_1.helpers.GeneralMapper;
+import com.lesson6_1.model.Passenger;
 import com.lesson6_1.model.Plane;
+import com.lesson6_1.service.PassengerService;
 import com.lesson6_1.service.PlaneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,27 +16,28 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Controller
-public class PlaneController {
+public class PassengerController {
 
     private GeneralMapper generalMapper;
-    private PlaneService planeService;
+    private PassengerService passengerService;
 
     @Autowired
-    public PlaneController(GeneralMapper generalMapper, PlaneService planeService) {
+    public PassengerController(GeneralMapper generalMapper, PassengerService passengerService) {
         this.generalMapper = generalMapper;
-        this.planeService = planeService;
+        this.passengerService = passengerService;
     }
+
 /*
-{"model":"TestModelPlain",
-"code":"2433",
-"yearProduced":"2019-03-03",
-"avgFuelConsumption":"200"}
- */
-    @RequestMapping(method = RequestMethod.POST, value = "/savePlane", produces = "text/plain")
+{"lastName":"Shevchenko",
+"nationality":"Ukr",
+"dateOfBirth":"1980-09-11",
+"passportCode":"123456789"}
+*/
+    @RequestMapping(method = RequestMethod.POST, value = "/savePassenger", produces = "text/plain")
     public ResponseEntity<String> save(HttpServletRequest request) {
         try {
-            Plane plane = generalMapper.mappingObject(request, Plane.class);
-            return new ResponseEntity<String>(planeService.savePlane(plane).toString(), HttpStatus.OK);
+            Passenger passenger = generalMapper.mappingObject(request, Passenger.class);
+            return new ResponseEntity<String>(passengerService.savePassenger(passenger).toString(), HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }

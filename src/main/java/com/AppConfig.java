@@ -1,11 +1,19 @@
 package com;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lesson6_1.controller.FlightController;
+import com.lesson6_1.controller.PassengerController;
 import com.lesson6_1.controller.PlaneController;
 import com.lesson6_1.helpers.GeneralMapper;
+import com.lesson6_1.model.Flight;
+import com.lesson6_1.model.Passenger;
 import com.lesson6_1.model.Plane;
+import com.lesson6_1.repository.FlightRepository;
+import com.lesson6_1.repository.PassengerRepository;
 import com.lesson6_1.repository.PlaneRepository;
 import com.lesson6_1.repository.RepositoryInterface;
+import com.lesson6_1.service.FlightService;
+import com.lesson6_1.service.PassengerService;
 import com.lesson6_1.service.PlaneService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -74,6 +82,47 @@ public class AppConfig {
     public RepositoryInterface<Plane> planeRepository(){
         return new PlaneRepository();
     }
+
+    @Bean
+    public Passenger passenger(){
+        return new Passenger();
+    }
+
+    @Bean
+    public PassengerController passengerController(){
+        return new PassengerController(generalMapper(), passengerService());
+    }
+
+    @Bean
+    public PassengerService passengerService(){
+        return new PassengerService(passengerRepository());
+    }
+
+    @Bean
+    public RepositoryInterface<Passenger> passengerRepository(){
+        return new PassengerRepository();
+    }
+
+    @Bean
+    public Flight flight(){
+        return new Flight();
+    }
+
+    @Bean
+    public FlightController flightController(){
+        return new FlightController(generalMapper(), flightService());
+    }
+
+    @Bean
+    public FlightService flightService(){
+        return new FlightService(flightRepository());
+    }
+
+    @Bean
+    public RepositoryInterface<Flight> flightRepository(){
+        return new FlightRepository();
+    }
+
 }
 
 
