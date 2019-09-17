@@ -43,6 +43,7 @@ public class ItemService {
         findById(id);
         dao.delete(id);
     }
+
     public Item findById(long id) throws PersistException {
 
        Item item = dao.findById(id);

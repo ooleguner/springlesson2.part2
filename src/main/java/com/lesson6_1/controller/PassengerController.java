@@ -5,7 +5,11 @@ import com.lesson6_1.model.Passenger;
 import com.lesson6_1.model.Plane;
 import com.lesson6_1.service.PassengerService;
 import com.lesson6_1.service.PlaneService;
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -43,5 +47,30 @@ public class PassengerController {
         }
     }
 
+/*
+       http://localhost:8080/delPasenger?idPasenger=1005
+*/
+    @RequestMapping(method = RequestMethod.DELETE, value = "/delPasenger", produces = "text/plain")
+    public ResponseEntity<String> delPasengert(HttpServletRequest req)   {
+        String idPasenger = req.getParameter("idPasenger");
+        try {
+            passengerService.delPasenger(Long.parseLong(idPasenger));
+            return new ResponseEntity<String>("Passenger id: " + idPasenger + " was deleted. All flights was canceled", HttpStatus.OK);
+        }
+        catch (DataIntegrityViolationException e){
+            return new ResponseEntity<String>("Passenger id: " + idPasenger + " was not deleted. Child record found.", HttpStatus.METHOD_NOT_ALLOWED);
+        }
+    }
+
+
+/*     примусово витерти навіть якщо є посилання на пасажира в їнших обєктах (польоту)
+       http://localhost:8080/forceDelPasenger?idPasenger=1005
+*/
+    @RequestMapping(method = RequestMethod.DELETE, value = "/forceDelPasenger", produces = "text/plain")
+    public ResponseEntity<String> forceDelPasengert(HttpServletRequest req)   {
+        String idPasenger = req.getParameter("idPasenger");
+            passengerService.forceDelPasenger(Long.parseLong(idPasenger));
+            return new ResponseEntity<String>("Passenger id: " + idPasenger + " was forced deleted. All flights was canceled", HttpStatus.OK);
+    }
 
 }

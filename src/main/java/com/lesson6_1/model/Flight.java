@@ -1,16 +1,21 @@
 package com.lesson6_1.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.lesson6_1.helpers.LocalDateDeserializer;
+import com.lesson6_1.helpers.LocalDateSerializer;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
 
 @Entity
-@Table(name = "FLIGHT")
+@Table(name = "FLIGTH")
 public class Flight {
 
     private Long id;
     private Plane plane;
-    private Collection passengers;
+    private Collection<Passenger> passengers;
     private LocalDate dateFlight;
     private String cityFrom;
     private String cityTo;
@@ -24,6 +29,13 @@ public class Flight {
         this.cityFrom = cityFrom;
         this.cityTo = cityTo;
     }
+
+    public Flight(LocalDate dateFlight, String cityFrom, String cityTo) {
+        this.dateFlight = dateFlight;
+        this.cityFrom = cityFrom;
+        this.cityTo = cityTo;
+    }
+
 
     @Id
     @SequenceGenerator(name = "FLIGHT_SEQ", sequenceName = "FLIGHT_SEQ", allocationSize = 1)
@@ -52,7 +64,7 @@ public class Flight {
     @JoinTable(name = "JOIN_FLIGHT_PASSENGER",
             joinColumns = {@JoinColumn(name = "FLIGHT_ID")},
             inverseJoinColumns = {@JoinColumn(name = "PASSENGER_ID")})
-    public Collection getPassengers() {
+    public Collection<Passenger> getPassengers() {
         return passengers;
     }
 
@@ -61,6 +73,8 @@ public class Flight {
     }
 
     @Column(name = "DATEFLIGHT")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     public LocalDate getDateFlight() {
         return dateFlight;
     }
@@ -95,8 +109,6 @@ public class Flight {
                 ", plane=" + plane +
                 ", dateFlight=" + dateFlight +
                 ", cityFrom='" + cityFrom + '\'' +
-                ", cityTo='" + cityTo + '\'' +
-                '}';
+                ", cityTo='" + cityTo + '\'' + "}";
     }
 }
-

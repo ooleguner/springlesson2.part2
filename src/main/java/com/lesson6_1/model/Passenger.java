@@ -1,5 +1,9 @@
 package com.lesson6_1.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.lesson6_1.helpers.LocalDateDeserializer;
+import com.lesson6_1.helpers.LocalDateSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 
@@ -14,17 +18,17 @@ public class Passenger {
     private String lastName;
     private String nationality;
     private LocalDate dateOfBirth;
-    private String passportCode;
+    private String pasportCode;
     private Collection flights;
 
     public Passenger() {
     }
 
-    public Passenger(String lastName, String nationality, LocalDate dateOfBirth, String passportCode) {
+    public Passenger(String lastName, String nationality, LocalDate dateOfBirth, String pasportCode) {
         this.lastName = lastName;
         this.nationality = nationality;
         this.dateOfBirth = dateOfBirth;
-        this.passportCode = passportCode;
+        this.pasportCode = pasportCode;
     }
 
     @Id
@@ -57,6 +61,8 @@ public class Passenger {
         this.nationality = nationality;
     }
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     @Column(name="DATEOFBIRTH")
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
@@ -66,20 +72,21 @@ public class Passenger {
         this.dateOfBirth = dateOfBirth;
     }
 
-    @Column(name = "PASSPORTCODE")
-    public String getPassportCode() {
-        return passportCode;
+    @Column(name = "PASPORTCODE")
+    public String getPasportCode() {
+        return pasportCode;
     }
 
-    public void setPassportCode(String passportCode) {
-        this.passportCode = passportCode;
+    public void setPasportCode(String pasportCode) {
+        this.pasportCode = pasportCode;
     }
 
-    @ManyToMany
-    @JoinTable(name = "JOIN_FLIGHT_PASSENGER",
-    joinColumns = {@JoinColumn(name = "PASSENGER_ID")},
-    inverseJoinColumns = {@JoinColumn(name = "FLIGHT_ID")})
-    public Collection getFlights() {
+    @ManyToMany (mappedBy = "passengers")
+//    @JoinTable(name = "JOIN_FLIGHT_PASSENGER",
+//    joinColumns = {@JoinColumn(name = "PASSENGER_ID")},
+//    inverseJoinColumns = {@JoinColumn(name = "FLIGHT_ID")})
+
+    public Collection<Flight> getFlights() {
         return flights;
     }
 
@@ -94,8 +101,6 @@ public class Passenger {
                 ", lastName='" + lastName + '\'' +
                 ", nationality='" + nationality + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
-                ", passportCode='" + passportCode + '\'' +
-              //  ", flights=" + flights +
-                '}';
+                ", pasportCode='" + pasportCode + '\'' + "}";
     }
 }

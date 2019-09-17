@@ -27,6 +27,15 @@ public class FlightController {
         this.flightService = flightService;
     }
 
+
+/*
+http://localhost:8080/saveFlight
+{"plane":{"id":"1022", "model":"oleg_today","code":"2433","yearProduced":"2019-03-03","avgFuelConsumption":"200"},
+"dateFlight":"1980-09-11",
+"cityFrom":"Kiev",
+"cityTo":"Lvov"}
+ */
+
     @RequestMapping(method = RequestMethod.POST, value = "/saveFlight", produces = "text/plain")
     public ResponseEntity<String> save(HttpServletRequest request) {
         try {
@@ -37,5 +46,20 @@ public class FlightController {
         }
     }
 
+    /*
+    ***  ADD PASENGER TO FLIGHT
+         http://localhost:8080/addPasengerToFlight?idPasenger=452&idFlight=968
+    */
+    @RequestMapping(method = RequestMethod.PUT, value = "/addPasengerToFlight", produces = "text/plain")
+    public ResponseEntity<String> addPasengerToFlight(HttpServletRequest req) {
+        String idPasenger = req.getParameter("idPasenger");
+        String idFlight = req.getParameter("idFlight");
+        flightService.addPasengerToFlight(Long.parseLong(idPasenger), Long.parseLong(idFlight));
+        return new ResponseEntity<String>("Passenger id: " + idPasenger + " was regustered to flight id : " + idFlight, HttpStatus.OK);
+    }
+
+    /*
+
+     */
 
 }

@@ -115,7 +115,7 @@ public class AppConfig {
 
     @Bean
     public FlightService flightService(){
-        return new FlightService(flightRepository());
+        return new FlightService(flightRepository(), passengerRepository());
     }
 
     @Bean
