@@ -5,5 +5,9 @@ import com.lesson6_1.model.Flight;
 import java.util.List;
 
 public interface FlightFilter {
-    List<Flight> filter (String param);
+    String[] params = null;
+
+    List<Flight> filter ();
+
+    String[] getParam();
 }

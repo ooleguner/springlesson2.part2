@@ -1,5 +1,6 @@
 package com.lesson6_1.controller;
 
+import com.lesson6_1.Filter.Filter;
 import com.lesson6_1.exception.ObjectExistException;
 import com.lesson6_1.helpers.GeneralMapper;
 import com.lesson6_1.model.Flight;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.StringReader;
 
 @Controller
 public class FlightController {
@@ -130,10 +132,25 @@ http://localhost:8080/saveFlight
 
   // flightsByDate(Filter filter) - список рейсов по дате (в один день), по промежутку даты (с даты-по дату) городу отправки, городу назначения, модели самолета
 
-  @RequestMapping (method = RequestMethod.GET, value = "/flightsByDate", produces = "text/plain")
+/*
+http://localhost:8080/flightsFilter
+{"oneDayFilter":{"param":"11.09.1984"},
+"cityFromFilter":{"param":"Kiev"},
+"datesFlightFilter":{"param":"11.09.1984","11.09.1984"},
+"cityToFilter":{"param":"Kiev"},
+"modelPlaneFilter":{"param":"TU"}
+}
+ */
+    @RequestMapping (method = RequestMethod.GET, value = "/flightsFilter", produces = "text/plain")
   public ResponseEntity<String> flightsByDate(HttpServletRequest request) {
-      String dateOfFlite = request.getParameter("dateOfFlite");
 
-      return new ResponseEntity<String>("flightsByDate(). Result:  SUCCESS.  \n" + flightService.flightsByDate(dateOfFlite), HttpStatus.OK);
+      try {
+          Filter filter = generalMapper.mappingObject(request, Filter.class);
+
+          return new ResponseEntity<String>  ( flightService.flightsByDate(filter), HttpStatus.OK);
+
+      } catch (IOException e)   {
+          return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
+      }
   }
 }

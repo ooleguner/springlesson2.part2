@@ -1,5 +1,6 @@
 package com.lesson6_1.service;
 
+import com.lesson6_1.Filter.Filter;
 import com.lesson6_1.Filter.FlightFilter;
 import com.lesson6_1.exception.ObjectExistException;
 import com.lesson6_1.model.Flight;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import javax.naming.NamingException;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -21,17 +21,15 @@ public class FlightService {
     RepositoryInterface repositoryFlight;
     RepositoryInterface repositoryPassenger;
     FilterHelper filterHelper;
-    FlightFilter oneDayFilter;
 
     @Autowired
-    public FlightService(RepositoryInterface repositoryFlight, RepositoryInterface repositoryPassenger, FilterHelper filterHelper, FlightFilter oneDayFilter) {
+    public FlightService(RepositoryInterface repositoryFlight, RepositoryInterface repositoryPassenger, FilterHelper filterHelper) {
         this.repositoryFlight = repositoryFlight;
         this.repositoryPassenger = repositoryPassenger;
         this.filterHelper = filterHelper;
-        this.oneDayFilter = oneDayFilter;
     }
 
-
+    @Transactional
     public Flight saveFlight(Flight flight) throws ObjectExistException {
         // перевірити чи вже є такий політ
         checkIfExist(flight);
@@ -56,13 +54,13 @@ public class FlightService {
             flight.getPassengers().add(passenger);
             passenger.getFlights().add(flight);
 
-          return (Flight) repositoryFlight.update(flight);
-        }
-        else{
+            return (Flight) repositoryFlight.update(flight);
+        } else {
             throw new ObjectExistException("Method : addPasengerToFlight(). Flight or Pasenger not found on DB. Flight id " + idFlight + " Pasenger id " + idPasenger);
         }
     }
 
+    @Transactional
     public void delFlight(long l) throws ObjectExistException {
         Flight flight = (Flight) repositoryFlight.findById(l);
         if (flight == null) {
@@ -74,20 +72,20 @@ public class FlightService {
             throw e;
         }
     }
-
+    @Transactional
     public Flight getFlight(long l) throws ObjectExistException {
         Flight flight = (Flight) repositoryFlight.findById(l);
-        if (flight==null){
+        if (flight == null) {
             throw new ObjectExistException("Flight with id: " + l + " not found in DB. ");
         }
         return flight;
     }
-
+    @Transactional
     public Flight updateFlight(Flight flight) throws ObjectExistException {
 
         // перевірка чи є такий flight з заданним ІД
         Flight flightInDB = (Flight) repositoryFlight.findById(flight.getId());
-        if (flightInDB==null){
+        if (flightInDB == null) {
             throw new ObjectExistException("Plane with id: " + flight.getId() + " not found in DB. ");
         }
         // перевірка чи вже є flight з тими ж MODEL та CityFrom, CityTo,  DateFlight  на який поновлюємо
@@ -95,55 +93,65 @@ public class FlightService {
         // саме поновлення
         return (Flight) repositoryFlight.update(flight);
     }
+    @Transactional
+    public String regularPassengers(int year) {
+        List<Object[]> result = filterHelper.customersWithMoreThan25Flights(year);
 
-    public String  regularPassengers(int year) {
-        List<Object[]>  result =  filterHelper.customersWithMoreThan25Flights(year);
-
-        if (result.isEmpty() || result.size()==0){
+        if (result.isEmpty() || result.size() == 0) {
             return "There is no one customer with more than 25 flights";
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        for(Object[] o : result){
-            stringBuilder.append("Passsenger id: " + o[1] + " Last Name : " + o[2] + ". Count of flights " + o[0] + "\n" );
+        for (Object[] o : result) {
+            stringBuilder.append("Passsenger id: " + o[1] + " Last Name : " + o[2] + ". Count of flights " + o[0] + "\n");
         }
         String s = stringBuilder.toString();
         System.out.println(s);
         return s;
     }
-
+    @Transactional
     public String mostPopularTo() {
-        List<Object[]>  result =  filterHelper.mostPopularTo();
-        if (result.isEmpty() || result.size()==0){
+        List<Object[]> result = filterHelper.mostPopularTo();
+        if (result.isEmpty() || result.size() == 0) {
             return "List of flights is empty.";
         }
         StringBuilder stringBuilder = new StringBuilder();
-        for(Object[] o : result){
-            stringBuilder.append("CITY NAME " + o[1] + " Count of flights " + o[0] + "\n" );
+        for (Object[] o : result) {
+            stringBuilder.append("CITY NAME " + o[1] + " Count of flights " + o[0] + "\n");
         }
         String s = stringBuilder.toString();
         System.out.println(s);
         return s;
     }
-
+    @Transactional
     public String mostPopularFrom() {
-        List<Object[]>  result =  filterHelper.mostPopularFrom();
-        if (result.isEmpty() || result.size()==0){
+        List<Object[]> result = filterHelper.mostPopularFrom();
+        if (result.isEmpty() || result.size() == 0) {
             return "List of flights is empty.";
         }
         StringBuilder stringBuilder = new StringBuilder();
-        for(Object[] o : result){
-            stringBuilder.append("CITY NAME " + o[1] + " Count of flights " + o[0] + "\n" );
+        for (Object[] o : result) {
+            stringBuilder.append("CITY NAME " + o[1] + " Count of flights " + o[0] + "\n");
         }
         String s = stringBuilder.toString();
         System.out.println(s);
         return s;
     }
+    @Transactional
+    public String flightsByDate(Filter filter) {
 
-    public String flightsByDate(String dateOfFlite) {
         List<Flight> filteredPlanes = null;
-       //todo
-        oneDayFilter.filter(dateOfFlite);
+        //todo
+        /*
+        NOT  WORKING
+         */
+        filteredPlanes = filter.getOneDayFilter().filter();
+        filteredPlanes = filter.getDatesFlightFilter().filter();
+        filteredPlanes = filter.getCityFromFilter().filter();
+        filteredPlanes = filter.getCityToFilter().filter();
+        filteredPlanes = filter.getModelPlaneFilter().filter();
+
+
         return null;
     }
 }

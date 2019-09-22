@@ -33,7 +33,7 @@ public class PassengerService {
     public void delPasenger(long l) throws DataIntegrityViolationException, ObjectExistException {
         Passenger passenger = (Passenger) repositoryInterface.findById(l);
         // перевіримо чи є такий пасажир по ІД
-        if(passenger==null){
+        if (passenger == null) {
             throw new ObjectExistException("Method delPasenger(). Pasenger with id: " + l + "not found ib DB");
         }
         // якщо є посилання на цього пасажира - отримаємо DataIntegrityViolationException. який прокинемо наверх
@@ -44,10 +44,10 @@ public class PassengerService {
         }
     }
 
-// примусово витерти навіть якщо є посилання на пасажира в їнших обєктах (польоту)
+    // примусово витерти навіть якщо є посилання на пасажира в їнших обєктах (польоту)
     public void forceDelPasenger(long l) throws ObjectExistException {
         Passenger passenger = (Passenger) repositoryInterface.findById(l);
-        if(passenger==null){
+        if (passenger == null) {
             throw new ObjectExistException("Method delPasenger(). Pasenger with id: " + l + "not found ib DB");
         }
         for (Flight flight : passenger.getFlights()) {
@@ -57,8 +57,8 @@ public class PassengerService {
     }
 
     public Passenger getPasenger(long l) throws ObjectExistException {
-        Passenger passenger=  (Passenger) repositoryInterface.findById(l);
-        if (passenger==null){
+        Passenger passenger = (Passenger) repositoryInterface.findById(l);
+        if (passenger == null) {
             throw new ObjectExistException("Pasenger with id: " + l + " not found in DB. ");
         }
         return passenger;
@@ -67,7 +67,7 @@ public class PassengerService {
     public Passenger updatePassenger(Passenger passenger) throws ObjectExistException {
         // перевірка чи є такий пасажир з заданним ІД
         Passenger passengerInDB = (Passenger) repositoryInterface.findById(passenger.getId());
-        if (passengerInDB==null){
+        if (passengerInDB == null) {
             throw new ObjectExistException("Plane with id: " + passenger.getId() + " not found in DB. ");
         }
         // перевірка чи вже є літак з тими ж MODEL та CODE на який поновлюємо
@@ -78,7 +78,7 @@ public class PassengerService {
 
     private void checkIfExist(Passenger passenger) throws ObjectExistException {
         if (repositoryInterface.checkIfPresent(passenger)) {
-            throw new ObjectExistException("Passenger "+ passenger.toString() + " is already present in DB.");
+            throw new ObjectExistException("Passenger " + passenger.toString() + " is already present in DB.");
         }
     }
 

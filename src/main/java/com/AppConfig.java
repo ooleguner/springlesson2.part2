@@ -1,8 +1,7 @@
 package com;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lesson6_1.Filter.FlightFilter;
-import com.lesson6_1.Filter.OneDayFilter;
+import com.lesson6_1.Filter.*;
 import com.lesson6_1.controller.FlightController;
 import com.lesson6_1.controller.PassengerController;
 import com.lesson6_1.controller.PlaneController;
@@ -68,72 +67,100 @@ public class AppConfig {
     }
 
     @Bean
-    public PlaneController planeController(){
+    public PlaneController planeController() {
         return new PlaneController(generalMapper(), planeService());
     }
 
     @Bean
-    public PlaneService planeService(){
-        return new PlaneService(planeRepository(),filterHelper());
+    public PlaneService planeService() {
+        return new PlaneService(planeRepository(), filterHelper());
     }
 
     @Bean
-    public RepositoryInterface<Plane> planeRepository(){
+    public RepositoryInterface<Plane> planeRepository() {
         return new PlaneRepository();
     }
 
     @Bean
-    public FilterHelper filterHelper(){
+    public FilterHelper filterHelper() {
         return new FilterHelper();
     }
+
     @Bean
-    public Passenger passenger(){
+    public Passenger passenger() {
         return new Passenger();
     }
 
     @Bean
-    public PassengerController passengerController(){
+    public PassengerController passengerController() {
         return new PassengerController(generalMapper(), passengerService());
     }
 
     @Bean
-    public PassengerService passengerService(){
+    public PassengerService passengerService() {
         return new PassengerService(passengerRepository());
     }
 
     @Bean
-    public RepositoryInterface<Passenger> passengerRepository(){
+    public RepositoryInterface<Passenger> passengerRepository() {
         return new PassengerRepository();
     }
 
     @Bean
-    public Flight flight(){
+    public Flight flight() {
         return new Flight();
     }
 
     @Bean
-    public FlightController flightController(){
+    public FlightController flightController() {
         return new FlightController(generalMapper(), flightService());
     }
 
     @Bean
-    public FlightService flightService(){
-        return new FlightService(flightRepository(), passengerRepository(), filterHelper(), oneDayFilter());
-    }
-
-    private FlightFilter oneDayFilter() {
-        return new OneDayFilter();
+    public FlightService flightService() {
+        return new FlightService(flightRepository(), passengerRepository(), filterHelper());
     }
 
     @Bean
-    public RepositoryInterface<Flight> flightRepository(){
+    public RepositoryInterface<Flight> flightRepository() {
         return new FlightRepository();
     }
 
+     /*
+        @Bean
+        public FlightFilter oneDayFilter(String[] param) {
+            return new OneDayFilter(param);
+        }
+
+        @Bean
+        public FlightFilter cityFromFilter(String[] p) {
+            return new CityFromFilter(p);
+        }
+
+        @Bean
+        public FlightFilter cityToFilter(String[] param){
+            return new CityToFilter(param);
+        }
+
+        @Bean
+        public FlightFilter modelPlaneFilter(String[] param){
+            return new ModelPlaneFilter(param);
+        }
+
+        @Bean
+        public FlightFilter datesFlightFilter(String[] p) {
+            return new DatesFlightFilter(p);
+        }
+        @Bean
+
+        public Filter filter(FlightFilter oneDayFilter, FlightFilter datesFlightFilter , FlightFilter cityFromFilter, FlightFilter cityToFilter, FlightFilter modelPlaneFilter) {
+            return new Filter(oneDayFilter,datesFlightFilter , cityFromFilter, cityToFilter,modelPlaneFilter);
+        }
+    */
+
 }
 
-
- /*
+/*
     //_______________________LESSON6_________________________________
     @Bean
     public ObjectMapper objectMapper() {
@@ -159,34 +186,4 @@ public class AppConfig {
     public ItemDao dao() {
         return new ItemDao();
     }
-
-
-    //_______________________LESSON5_________________________________
-    @Bean
-    public ObjectMapper objectMapper(){
-        return new ObjectMapper();
-    }
-
-    @Bean
-    public DAO dao() {
-        return new DAO();
-    }
-
-    @Bean
-    public ItemController itemController() {
-        return new ItemController(itemService(), itemMapper());
-    }
-
-    @Bean
-    public ItemMapper itemMapper() {
-        return new ItemMapper();
-    }
-
-    @Bean
-    public ItemService itemService() {
-        return new ItemService(dao());
-    }
-    */
-
-
-
+*/
