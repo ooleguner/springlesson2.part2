@@ -1,20 +1,10 @@
 package com.lesson6.service;
 
 import com.lesson5.PersistException;
-import com.lesson6.exception.ItemExistException;
 import com.lesson6.model.Item;
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.lesson6.repository.ItemDao;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Created by oleg on 14.07.2019.
- */
 
 @Transactional
 public class ItemService {

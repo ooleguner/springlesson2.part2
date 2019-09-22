@@ -1,7 +1,6 @@
 package com.lesson6_1.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lesson6.model.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
