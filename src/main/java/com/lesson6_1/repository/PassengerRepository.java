@@ -8,6 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.List;
 
 public class PassengerRepository implements RepositoryInterface<Passenger> {
 
@@ -37,5 +39,18 @@ public class PassengerRepository implements RepositoryInterface<Passenger> {
         } catch (DataIntegrityViolationException e) {
             throw e;
         }
+    }
+
+    @Override
+    public boolean checkIfPresent(Passenger passenger) {
+        Query q = entityManager.createNativeQuery("SELECT * FROM PASSENGER  WHERE LASTNAME = :LASTNAME AND PASPORTCODE = :PASPORTCODE ");
+        q.setParameter("LASTNAME", passenger.getLastName());
+        q.setParameter("PASPORTCODE", passenger.getPasportCode());
+
+        List<Passenger> listPasenger = (List<Passenger>) q.getResultList();
+        if (listPasenger == null || listPasenger.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 }

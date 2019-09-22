@@ -1,6 +1,8 @@
 package com;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lesson6_1.Filter.FlightFilter;
+import com.lesson6_1.Filter.OneDayFilter;
 import com.lesson6_1.controller.FlightController;
 import com.lesson6_1.controller.PassengerController;
 import com.lesson6_1.controller.PlaneController;
@@ -8,10 +10,7 @@ import com.lesson6_1.helpers.GeneralMapper;
 import com.lesson6_1.model.Flight;
 import com.lesson6_1.model.Passenger;
 import com.lesson6_1.model.Plane;
-import com.lesson6_1.repository.FlightRepository;
-import com.lesson6_1.repository.PassengerRepository;
-import com.lesson6_1.repository.PlaneRepository;
-import com.lesson6_1.repository.RepositoryInterface;
+import com.lesson6_1.repository.*;
 import com.lesson6_1.service.FlightService;
 import com.lesson6_1.service.PassengerService;
 import com.lesson6_1.service.PlaneService;
@@ -75,7 +74,7 @@ public class AppConfig {
 
     @Bean
     public PlaneService planeService(){
-        return new PlaneService(planeRepository());
+        return new PlaneService(planeRepository(),filterHelper());
     }
 
     @Bean
@@ -83,6 +82,10 @@ public class AppConfig {
         return new PlaneRepository();
     }
 
+    @Bean
+    public FilterHelper filterHelper(){
+        return new FilterHelper();
+    }
     @Bean
     public Passenger passenger(){
         return new Passenger();
@@ -115,7 +118,11 @@ public class AppConfig {
 
     @Bean
     public FlightService flightService(){
-        return new FlightService(flightRepository(), passengerRepository());
+        return new FlightService(flightRepository(), passengerRepository(), filterHelper(), oneDayFilter());
+    }
+
+    private FlightFilter oneDayFilter() {
+        return new OneDayFilter();
     }
 
     @Bean

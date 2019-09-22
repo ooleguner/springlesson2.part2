@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 
 @Entity
-@Table(name = "FLIGTH")
+@Table(name = "FLIGHT")
 public class Flight {
 
     private Long id;

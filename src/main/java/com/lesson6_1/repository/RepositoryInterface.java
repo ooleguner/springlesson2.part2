@@ -1,4 +1,5 @@
 package com.lesson6_1.repository;
+import com.lesson6_1.model.Plane;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public interface RepositoryInterface<T>{
@@ -10,4 +11,6 @@ public interface RepositoryInterface<T>{
     T update(T t);
 
     void delete(T t) throws DataIntegrityViolationException;
+
+    boolean checkIfPresent(T t);
 }
