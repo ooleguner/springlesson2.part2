@@ -3,6 +3,7 @@ package com.lesson6.controller;
 import com.lesson5.PersistException;
 import com.lesson6.helpers.ItemMapper;
 import com.lesson6.model.Item;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,9 @@ public class ItemController {
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (PersistException e) {
-            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
 
@@ -56,7 +59,9 @@ http://localhost:8080/get/101
         try {
             return new ResponseEntity<String>(itemService.findById(Long.parseLong(id)).toString(), HttpStatus.OK);
         } catch (PersistException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);  //404
+        } catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
 
@@ -76,7 +81,9 @@ http://localhost:8080/get/101
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (PersistException e) {
-            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
 
@@ -85,8 +92,12 @@ http://localhost:8080/get/101
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/deleteByName/{name}", produces = "text/plain")
     public ResponseEntity<String> deleteByName(@PathVariable String name) {
-        int count = itemService.deleteByName(name);
-        return new ResponseEntity<String>(count + " Items with name like : " + name + " was deleted", HttpStatus.OK);
+        try {
+            int count = itemService.deleteByName(name);
+            return new ResponseEntity<String>(count + " Items with name like : " + name + " was deleted", HttpStatus.OK);
+        } catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
+        }
     }
 
 
@@ -99,7 +110,9 @@ http://localhost:8080/get/101
             itemService.delete(Long.parseLong(id));
             return new ResponseEntity<String>("Item id : " + id + " was deleted. ", HttpStatus.OK);
         } catch (PersistException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
 }
