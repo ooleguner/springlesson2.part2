@@ -36,7 +36,7 @@ public class ItemService {
 
     public Item findById(long id) throws PersistException {
 
-       Item item = dao.findById(id);
+        Item item = dao.findById(id);
         if (item == null) {
             throw new PersistException("Item with id " + id + " not found in DB. ");
         }
@@ -50,7 +50,11 @@ public class ItemService {
     }
 
     @Transactional
-    public int deleteByName(String name) {
-       return dao.deleteByName(name);
+    public int deleteByName(String name) throws PersistException {
+        int res = dao.deleteByName(name);
+        if (res == 0) {
+            throw new PersistException("Item with name " + name + " not found in DB. ");
+        }
+        return res;
     }
 }

@@ -46,7 +46,6 @@ public class ItemDao {
         Query query = entityManager.createNativeQuery("DELETE FROM ITEM WHERE NAME LIKE  :name ")
                 .setParameter("name", "%" + name + "%");
         int count = query.executeUpdate();
-        System.out.println(count);
         return count;
     }
 }

@@ -45,7 +45,7 @@ public class ItemController {
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (PersistException e) {
-            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
@@ -58,6 +58,8 @@ http://localhost:8080/get/101
     public ResponseEntity<String> findById(@PathVariable String id) {
         try {
             return new ResponseEntity<String>(itemService.findById(Long.parseLong(id)).toString(), HttpStatus.OK);
+        } catch (IllegalArgumentException  e) {
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (PersistException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);  //404
         } catch (HibernateException e) {
@@ -79,7 +81,7 @@ http://localhost:8080/get/101
         try {
             return new ResponseEntity<String>(itemService.update(itemMapper.mappingItem(req)).toString() + " was updated in DB. ", HttpStatus.OK);
         } catch (IOException e) {
-            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (PersistException e) {
             return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (HibernateException e) {
@@ -95,6 +97,10 @@ http://localhost:8080/get/101
         try {
             int count = itemService.deleteByName(name);
             return new ResponseEntity<String>(count + " Items with name like : " + name + " was deleted", HttpStatus.OK);
+        } catch (IllegalArgumentException  e) {
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (PersistException e) {
+            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
@@ -109,6 +115,8 @@ http://localhost:8080/get/101
         try {
             itemService.delete(Long.parseLong(id));
             return new ResponseEntity<String>("Item id : " + id + " was deleted. ", HttpStatus.OK);
+        } catch (IllegalArgumentException  e) {
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (PersistException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (HibernateException e) {
