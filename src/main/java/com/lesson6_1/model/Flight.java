@@ -7,7 +7,7 @@ import com.lesson6_1.helpers.LocalDateSerializer;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "FLIGHT")
@@ -15,7 +15,7 @@ public class Flight {
 
     private Long id;
     private Plane plane;
-    private Collection<Passenger> passengers;
+    private List<Passenger> passengers;
     private LocalDate dateFlight;
     private String cityFrom;
     private String cityTo;
@@ -64,11 +64,11 @@ public class Flight {
     @JoinTable(name = "JOIN_FLIGHT_PASSENGER",
             joinColumns = {@JoinColumn(name = "FLIGHT_ID")},
             inverseJoinColumns = {@JoinColumn(name = "PASSENGER_ID")})
-    public Collection<Passenger> getPassengers() {
+    public List<Passenger> getPassengers() {
         return passengers;
     }
 
-    public void setPassengers(Collection passengers) {
+    public void setPassengers(List passengers) {
         this.passengers = passengers;
     }
 

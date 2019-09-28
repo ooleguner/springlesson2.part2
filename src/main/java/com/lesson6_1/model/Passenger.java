@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.lesson6_1.helpers.LocalDateDeserializer;
 import com.lesson6_1.helpers.LocalDateSerializer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Controller;
+
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.List;
+
 @Entity
 @Table(name = "PASSENGER")
 public class Passenger {
@@ -19,7 +19,7 @@ public class Passenger {
     private String nationality;
     private LocalDate dateOfBirth;
     private String pasportCode;
-    private Collection flights;
+    private List flights;
 
     public Passenger() {
     }
@@ -82,15 +82,11 @@ public class Passenger {
     }
 
     @ManyToMany (mappedBy = "passengers")
-//    @JoinTable(name = "JOIN_FLIGHT_PASSENGER",
-//    joinColumns = {@JoinColumn(name = "PASSENGER_ID")},
-//    inverseJoinColumns = {@JoinColumn(name = "FLIGHT_ID")})
-
-    public Collection<Flight> getFlights() {
+    public List<Flight> getFlights() {
         return flights;
     }
 
-    public void setFlights(Collection flights) {
+    public void setFlights(List flights) {
         this.flights = flights;
     }
 

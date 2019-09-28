@@ -40,7 +40,7 @@ public class PlaneController {
             Plane plane = generalMapper.mappingObject(request, Plane.class);
             return new ResponseEntity<String>("Plane saved: " + planeService.savePlane(plane).toString(), HttpStatus.OK);
         } catch (IOException e) {
-            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.CONFLICT);
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("ObjectExistException : " + e.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
         }
@@ -55,6 +55,8 @@ public class PlaneController {
         try {
             planeService.delPlane(Long.parseLong(idPlane));
             return new ResponseEntity<String>("Plane id: " + idPlane + " was deleted.", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<String>("Plane id: " + idPlane + " was not deleted. Child record found.", HttpStatus.METHOD_NOT_ALLOWED);
         } catch (ObjectExistException e) {
@@ -69,6 +71,8 @@ public class PlaneController {
         try {
             plane = planeService.getPlane(Long.parseLong(idPlane));
             return new ResponseEntity<String>("Plane id: " + idPlane + " found in DB. " + plane.toString(), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("Plane id: " + idPlane + " not found in DB. ", HttpStatus.NOT_FOUND);
         }

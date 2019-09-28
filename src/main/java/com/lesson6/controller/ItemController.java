@@ -45,7 +45,7 @@ public class ItemController {
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (PersistException e) {
-            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.CONFLICT);
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
@@ -83,7 +83,7 @@ http://localhost:8080/get/101
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (PersistException e) {
-            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.CONFLICT);
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }

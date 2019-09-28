@@ -4,6 +4,7 @@ import com.lesson6_1.exception.ObjectExistException;
 import com.lesson6_1.helpers.GeneralMapper;
 import com.lesson6_1.model.Passenger;
 import com.lesson6_1.service.PassengerService;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,9 @@ public class PassengerController {
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
-            return new ResponseEntity<String>("ObjectExistException : " + e.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity<String>("ObjectExistException : " + e.getMessage(), HttpStatus.CONFLICT);
+        }  catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
 
@@ -54,10 +57,14 @@ public class PassengerController {
         try {
             passengerService.delPasenger(Long.parseLong(idPasenger));
             return new ResponseEntity<String>("Passenger id: " + idPasenger + " was deleted. All flights was canceled", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<String>("Passenger id: " + idPasenger + " was not deleted. Child record found.", HttpStatus.METHOD_NOT_ALLOWED);
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("Pasenger id: " + idPasenger + " was not deleted. Pasenger with id: " + idPasenger + " not found in DB.\n" + e.getMessage(), HttpStatus.NOT_FOUND);
+        }  catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
 
@@ -71,8 +78,12 @@ public class PassengerController {
         try {
             passengerService.forceDelPasenger(Long.parseLong(idPasenger));
             return new ResponseEntity<String>("Passenger id: " + idPasenger + " was forced deleted. All flights was canceled", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("Pasenger id: " + idPasenger + " not found in DB. ", HttpStatus.NOT_FOUND);
+        }  catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
 
@@ -84,8 +95,12 @@ public class PassengerController {
         try {
             passenger = passengerService.getPasenger(Long.parseLong(idPasenger));
             return new ResponseEntity<String>("Passenger id: " + idPasenger + " found in DB. " + passenger.toString(), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("Pasenger id: " + idPasenger + " not found in DB. ", HttpStatus.NOT_FOUND);
+        }  catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
 /*
@@ -102,7 +117,9 @@ public class PassengerController {
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
-            return new ResponseEntity<String>(e.getMessage() , HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(e.getMessage() , HttpStatus.CONFLICT);
+        }  catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
 }
