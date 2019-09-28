@@ -1,6 +1,5 @@
 package com.lesson6.controller;
 
-import com.lesson5.PersistException;
 import com.lesson6.exception.ItemExistException;
 import com.lesson6.helpers.ItemMapper;
 import com.lesson6.model.Item;
