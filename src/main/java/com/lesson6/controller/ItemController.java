@@ -1,6 +1,7 @@
 package com.lesson6.controller;
 
 import com.lesson5.PersistException;
+import com.lesson6.exception.ItemExistException;
 import com.lesson6.helpers.ItemMapper;
 import com.lesson6.model.Item;
 import org.hibernate.HibernateException;
@@ -44,7 +45,7 @@ public class ItemController {
             return new ResponseEntity<String>(item.toString() + "saved into DB", HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (PersistException e) {
+        } catch (ItemExistException e) {
             return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.CONFLICT);
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
@@ -60,7 +61,7 @@ http://localhost:8080/get/101
             return new ResponseEntity<String>(itemService.findById(Long.parseLong(id)).toString(), HttpStatus.OK);
         } catch (IllegalArgumentException  e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (PersistException e) {
+        } catch (ItemExistException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);  //404
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
@@ -82,7 +83,7 @@ http://localhost:8080/get/101
             return new ResponseEntity<String>(itemService.update(itemMapper.mappingItem(req)).toString() + " was updated in DB. ", HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (PersistException e) {
+        } catch (ItemExistException e) {
             return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.CONFLICT);
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
@@ -99,7 +100,7 @@ http://localhost:8080/get/101
             return new ResponseEntity<String>(count + " Items with name like : " + name + " was deleted", HttpStatus.OK);
         } catch (IllegalArgumentException  e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (PersistException e) {
+        } catch (ItemExistException e) {
             return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
@@ -117,7 +118,7 @@ http://localhost:8080/get/101
             return new ResponseEntity<String>("Item id : " + id + " was deleted. ", HttpStatus.OK);
         } catch (IllegalArgumentException  e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (PersistException e) {
+        } catch (ItemExistException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
