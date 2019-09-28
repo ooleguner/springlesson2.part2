@@ -1,7 +1,10 @@
 package com;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lesson6_1.Filter.*;
+import com.lesson6.controller.ItemController;
+import com.lesson6.helpers.ItemMapper;
+import com.lesson6.repository.ItemDao;
+import com.lesson6.service.ItemService;
 import com.lesson6_1.controller.FlightController;
 import com.lesson6_1.controller.PassengerController;
 import com.lesson6_1.controller.PlaneController;
@@ -43,7 +46,7 @@ public class AppConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         LocalContainerEntityManagerFactoryBean en = new LocalContainerEntityManagerFactoryBean();
         en.setDataSource(dataSource());
-        en.setPackagesToScan(new String[]{"com.lesson6_1"});
+        en.setPackagesToScan(new String[]{"com.lesson6"});
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         en.setJpaVendorAdapter(vendorAdapter);
         return en;
@@ -158,14 +161,11 @@ public class AppConfig {
         }
     */
 
-}
 
-/*
+
+
     //_______________________LESSON6_________________________________
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
+
 
     @Bean
     public ItemMapper itemMapper() {
@@ -186,4 +186,4 @@ public class AppConfig {
     public ItemDao dao() {
         return new ItemDao();
     }
-*/
+}
