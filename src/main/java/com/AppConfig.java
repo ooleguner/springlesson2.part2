@@ -46,7 +46,7 @@ public class AppConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         LocalContainerEntityManagerFactoryBean en = new LocalContainerEntityManagerFactoryBean();
         en.setDataSource(dataSource());
-        en.setPackagesToScan(new String[]{"com.lesson6"});
+        en.setPackagesToScan(new String[]{"com.lesson6_1"});
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         en.setJpaVendorAdapter(vendorAdapter);
         return en;
@@ -128,40 +128,6 @@ public class AppConfig {
     public RepositoryInterface<Flight> flightRepository() {
         return new FlightRepository();
     }
-
-     /*
-        @Bean
-        public FlightFilter oneDayFilter(String[] param) {
-            return new OneDayFilter(param);
-        }
-
-        @Bean
-        public FlightFilter cityFromFilter(String[] p) {
-            return new CityFromFilter(p);
-        }
-
-        @Bean
-        public FlightFilter cityToFilter(String[] param){
-            return new CityToFilter(param);
-        }
-
-        @Bean
-        public FlightFilter modelPlaneFilter(String[] param){
-            return new ModelPlaneFilter(param);
-        }
-
-        @Bean
-        public FlightFilter datesFlightFilter(String[] p) {
-            return new DatesFlightFilter(p);
-        }
-        @Bean
-
-        public Filter filter(FlightFilter oneDayFilter, FlightFilter datesFlightFilter , FlightFilter cityFromFilter, FlightFilter cityToFilter, FlightFilter modelPlaneFilter) {
-            return new Filter(oneDayFilter,datesFlightFilter , cityFromFilter, cityToFilter,modelPlaneFilter);
-        }
-    */
-
-
 
 
     //_______________________LESSON6_________________________________

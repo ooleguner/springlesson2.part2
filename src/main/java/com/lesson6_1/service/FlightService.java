@@ -1,7 +1,5 @@
 package com.lesson6_1.service;
 
-import com.lesson6_1.Filter.Filter;
-import com.lesson6_1.Filter.FlightFilter;
 import com.lesson6_1.exception.ObjectExistException;
 import com.lesson6_1.model.Flight;
 import com.lesson6_1.model.Passenger;
@@ -138,20 +136,16 @@ public class FlightService {
         return s;
     }
     @Transactional
-    public String flightsByDate(Filter filter) {
+    public String filter(String model, String date, String cityFrom, String dateBegin,String dateEnd, String cityTo) {
+        List<Flight> result = filterHelper.filer(model, date,cityFrom,dateBegin,dateEnd,cityTo);
 
-        List<Flight> filteredPlanes = null;
-        //todo
-        /*
-        NOT  WORKING
-         */
-        filteredPlanes = filter.getOneDayFilter().filter();
-        filteredPlanes = filter.getDatesFlightFilter().filter();
-        filteredPlanes = filter.getCityFromFilter().filter();
-        filteredPlanes = filter.getCityToFilter().filter();
-        filteredPlanes = filter.getModelPlaneFilter().filter();
-
-
-        return null;
+        StringBuilder stringBuilder = new StringBuilder();
+        if (result.size()!=0){
+            for(Flight flight : result){
+                stringBuilder.append(flight.toString() + "\n");
+            }
+            return stringBuilder.toString();
+        }
+        return "NO ONE FLIGHT FOUND";
     }
 }

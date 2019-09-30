@@ -42,8 +42,8 @@ public class PassengerController {
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
-            return new ResponseEntity<String>("ObjectExistException : " + e.getMessage(), HttpStatus.CONFLICT);
-        }  catch (HibernateException e) {
+            return new ResponseEntity<String>("ObjectExistException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
@@ -59,11 +59,11 @@ public class PassengerController {
             return new ResponseEntity<String>("Passenger id: " + idPasenger + " was deleted. All flights was canceled", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<String>("Passenger id: " + idPasenger + " was not deleted. Child record found.", HttpStatus.METHOD_NOT_ALLOWED);
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("Pasenger id: " + idPasenger + " was not deleted. Pasenger with id: " + idPasenger + " not found in DB.\n" + e.getMessage(), HttpStatus.NOT_FOUND);
-        }  catch (HibernateException e) {
+        } catch (DataIntegrityViolationException e) {
+            return new ResponseEntity<String>("Passenger id: " + idPasenger + " was not deleted. Child record found.", HttpStatus.METHOD_NOT_ALLOWED);
+        } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
@@ -82,7 +82,7 @@ public class PassengerController {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("Pasenger id: " + idPasenger + " not found in DB. ", HttpStatus.NOT_FOUND);
-        }  catch (HibernateException e) {
+        } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
@@ -99,26 +99,27 @@ public class PassengerController {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("Pasenger id: " + idPasenger + " not found in DB. ", HttpStatus.NOT_FOUND);
-        }  catch (HibernateException e) {
+        } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
-/*
-       {"lastName":"ShevchenkoUpdated",
-       "nationality":"Ukr",
-       "dateOfBirth":"1980-09-11",
-       "passportCode":"000"}
-*/
+
+    /*
+           {"lastName":"ShevchenkoUpdated",
+           "nationality":"Ukr",
+           "dateOfBirth":"1980-09-11",
+           "passportCode":"000"}
+    */
     @RequestMapping(method = RequestMethod.PUT, value = "/updatePasenger", produces = "text/plain")
     public ResponseEntity<String> updatePasenger(HttpServletRequest request) {
         try {
             Passenger passenger = generalMapper.mappingObject(request, Passenger.class);
-            return new ResponseEntity<String>("updatePasenger(). Result:  success" +passengerService.updatePassenger(passenger).toString(), HttpStatus.OK);
+            return new ResponseEntity<String>("updatePasenger(). Result:  success" + passengerService.updatePassenger(passenger).toString(), HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
-            return new ResponseEntity<String>(e.getMessage() , HttpStatus.CONFLICT);
-        }  catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }

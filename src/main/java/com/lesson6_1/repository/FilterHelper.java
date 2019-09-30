@@ -67,4 +67,78 @@ public class FilterHelper {
         return q.getResultList();
     }
 
+    public List<Flight> filer(String model, String date, String cityFrom, String dateBegin, String dateEnd, String cityTo) {
+
+        StringBuilder stringQuery = new StringBuilder("SELECT FLIGHT.ID, Plane_ID, DATEFLIGHT, CITYFROM, CITYTO FROM FLIGHT ");
+        String[] param = {null, null, null, null, null, null};
+        int lastFreeIndex = 0;
+
+        if (model != null) {
+            stringQuery.append(" JOIN PLANE ON FLIGHT.PLANE_ID = PLANE.ID WHERE PLANE.MODEL = ? ");
+            param[lastFreeIndex] = model;
+            lastFreeIndex++;
+        }
+
+
+        if (date != null) {
+            String end = stringQuery.substring(stringQuery.length() - 7);
+            if (end.equals("FLIGHT ")) {
+                stringQuery.append(" WHERE DATEFLIGHT = ? ");
+                param[lastFreeIndex] = date;
+                lastFreeIndex++;
+            } else {
+                stringQuery.append("AND CITYFROM = ? ");
+                param[lastFreeIndex] = date;
+                lastFreeIndex++;
+            }
+        }
+
+        if (cityFrom != null) {
+            String end = stringQuery.substring(stringQuery.length() - 7);
+            if (end.equals("FLIGHT ")) {
+                stringQuery.append("WHERE CITYFROM = ? ");
+                param[lastFreeIndex] = cityFrom;
+                lastFreeIndex++;
+            } else {
+                stringQuery.append("AND CITYFROM = ? ");
+                param[lastFreeIndex] = cityFrom;
+                lastFreeIndex++;
+            }
+        }
+
+        if (dateBegin != null && dateEnd != null) {
+            String end = stringQuery.substring(stringQuery.length() - 7);
+            if (end.equals("FLIGHT ")) {
+                stringQuery.append(" WHERE ");
+            } else {
+                stringQuery.append(" AND ");
+            }
+            stringQuery.append(" DATEFLIGHT >= ? AND DATEFLIGHT <= ?");
+            param[lastFreeIndex] = dateBegin;
+            lastFreeIndex++;
+            param[lastFreeIndex] = dateEnd;
+            lastFreeIndex++;
+        }
+
+        if (cityTo != null) {
+            String end = stringQuery.substring(stringQuery.length() - 7);
+            if (end.equals("FLIGHT ")) {
+                stringQuery.append(" WHERE ");
+            } else {
+                stringQuery.append(" AND ");
+            }
+            stringQuery.append(" CITYTO = ? ");
+            param[lastFreeIndex] = cityTo;
+            lastFreeIndex++;
+        }
+
+        Query query = entityManager.createNativeQuery(stringQuery.toString(), Flight.class);
+        for (int i = 0; i < lastFreeIndex; i++) {
+            query.setParameter(i + 1, param[i]);
+        }
+
+        System.out.println(query);
+
+        return query.getResultList();
+    }
 }

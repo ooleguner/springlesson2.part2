@@ -1,7 +1,5 @@
 package com.lesson6_1.controller;
 
-import com.lesson5.PersistException;
-import com.lesson6_1.Filter.Filter;
 import com.lesson6_1.exception.ObjectExistException;
 import com.lesson6_1.helpers.GeneralMapper;
 import com.lesson6_1.model.Flight;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.StringReader;
 
 @Controller
 public class FlightController {
@@ -48,7 +45,7 @@ http://localhost:8080/saveFlight
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
-            return new ResponseEntity<String>("ObjectExistException : " + e.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity<String>("ObjectExistException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
@@ -70,7 +67,7 @@ http://localhost:8080/saveFlight
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
@@ -87,10 +84,10 @@ http://localhost:8080/saveFlight
             return new ResponseEntity<String>("Flight id: " + idFlight + " was deleted.", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<String>("Flight id: " + idFlight + " was not deleted. Child record found.", HttpStatus.METHOD_NOT_ALLOWED);
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("Flight id: " + idFlight + " not found in DB. ", HttpStatus.NOT_FOUND);
+        } catch (DataIntegrityViolationException e) {
+            return new ResponseEntity<String>("Flight id: " + idFlight + " was not deleted. Child record found.", HttpStatus.METHOD_NOT_ALLOWED);
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
@@ -120,7 +117,7 @@ http://localhost:8080/saveFlight
         } catch (IOException e) {
             return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
@@ -163,25 +160,37 @@ http://localhost:8080/saveFlight
     // flightsByDate(Filter filter) - список рейсов по дате (в один день), по промежутку даты (с даты-по дату) городу отправки, городу назначения, модели самолета
 
     /*
-    http://localhost:8080/flightsFilter
-    {"oneDayFilter":{"param":"11.09.1984"},
-    "cityFromFilter":{"param":"Kiev"},
-    "datesFlightFilter":{"param":"11.09.1984","11.09.1984"},
-    "cityToFilter":{"param":"Kiev"},
-    "modelPlaneFilter":{"param":"TU"}
-    }
+    http://localhost:8080/flightsFilter?oneDay=11.09.1984&cityFrom=Kiev
+    http://localhost:8080/flightsFilter?cityFrom=Kiev
+    http://localhost:8080/flightsFilter?cityFrom=Kiev&datesFlight=11.09.1984-12.09.1984
+    http://localhost:8080/flightsFilter?datesFlight=11.09.1984-12.09.1984
+    http://localhost:8080/flightsFilter?cityFrom=Kiev&cityTo=Lvdov
+    http://localhost:8080/flightsFilter?cityTo=Lvdov
+    http://localhost:8080/flightsFilter?model=Updates&cityTo=Lvdov
      */
     @RequestMapping(method = RequestMethod.GET, value = "/flightsFilter", produces = "text/plain")
     public ResponseEntity<String> flightsByDate(HttpServletRequest request) {
+        String date = request.getParameter("oneDay");
+        String cityFrom = request.getParameter("cityFrom");
+
+        String datesFlight = request.getParameter("datesFlight");
+        String dateBegin=null;
+        String dateEnd=null;
+        if (datesFlight != null) {
+            String[] arrDates = datesFlight.split("-");
+            dateBegin = arrDates[0];
+            dateEnd = arrDates[1];
+        }
+        String cityTo = request.getParameter("cityTo");
+        String model = request.getParameter("model");
+
+
 
         try {
-            Filter filter = generalMapper.mappingObject(request, Filter.class);
-
-            return new ResponseEntity<String>(flightService.flightsByDate(filter), HttpStatus.OK);
-
-        } catch (IOException e) {
-            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (HibernateException e) {
+            return new ResponseEntity<String>("flightsFilter(). Result:  SUCCESS.  \n" + flightService.filter(model, date, cityFrom, dateBegin,dateEnd, cityTo), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }

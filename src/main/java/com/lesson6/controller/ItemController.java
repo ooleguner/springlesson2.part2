@@ -39,13 +39,12 @@ public class ItemController {
     public ResponseEntity<String> save(HttpServletRequest request) {
         try {
             Item item = itemMapper.mappingItem(request);
-
             itemService.save(item);
             return new ResponseEntity<String>(item.toString() + "saved into DB", HttpStatus.OK);
-        } catch (IOException e) {
-            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }  catch (IOException e) {
+            return new ResponseEntity<String>("IOException. Can not build object from request. " + e.getMessage(), HttpStatus.BAD_REQUEST); //400
         } catch (ItemExistException e) {
-            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.BAD_REQUEST);  //400
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
@@ -81,9 +80,9 @@ http://localhost:8080/get/101
         try {
             return new ResponseEntity<String>(itemService.update(itemMapper.mappingItem(req)).toString() + " was updated in DB. ", HttpStatus.OK);
         } catch (IOException e) {
-            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST); //400
         } catch (ItemExistException e) {
-            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.BAD_REQUEST); //400
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
@@ -98,9 +97,9 @@ http://localhost:8080/get/101
             int count = itemService.deleteByName(name);
             return new ResponseEntity<String>(count + " Items with name like : " + name + " was deleted", HttpStatus.OK);
         } catch (IllegalArgumentException  e) {
-            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);  //400
         } catch (ItemExistException e) {
-            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>("PersistException " + e.getMessage(), HttpStatus.NOT_FOUND);   //404
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
@@ -116,9 +115,9 @@ http://localhost:8080/get/101
             itemService.delete(Long.parseLong(id));
             return new ResponseEntity<String>("Item id : " + id + " was deleted. ", HttpStatus.OK);
         } catch (IllegalArgumentException  e) {
-            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);  //400
         } catch (ItemExistException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);   //404
         } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }

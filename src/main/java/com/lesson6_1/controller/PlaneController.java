@@ -4,6 +4,7 @@ import com.lesson6_1.exception.ObjectExistException;
 import com.lesson6_1.helpers.GeneralMapper;
 import com.lesson6_1.model.Plane;
 import com.lesson6_1.service.PlaneService;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -40,9 +41,11 @@ public class PlaneController {
             Plane plane = generalMapper.mappingObject(request, Plane.class);
             return new ResponseEntity<String>("Plane saved: " + planeService.savePlane(plane).toString(), HttpStatus.OK);
         } catch (IOException e) {
-            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
-            return new ResponseEntity<String>("ObjectExistException : " + e.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
+            return new ResponseEntity<String>("ObjectExistException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
 
@@ -61,6 +64,8 @@ public class PlaneController {
             return new ResponseEntity<String>("Plane id: " + idPlane + " was not deleted. Child record found.", HttpStatus.METHOD_NOT_ALLOWED);
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("Plane id: " + idPlane + " was not deleted. Plane with id: " + idPlane + " not found in DB.\n" + e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
 
@@ -75,6 +80,8 @@ public class PlaneController {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("Plane id: " + idPlane + " not found in DB. ", HttpStatus.NOT_FOUND);
+        } catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
 
@@ -94,6 +101,8 @@ public class PlaneController {
             return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (HibernateException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
 
