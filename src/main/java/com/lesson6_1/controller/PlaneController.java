@@ -41,7 +41,7 @@ public class PlaneController {
             Plane plane = generalMapper.mappingObject(request, Plane.class);
             return new ResponseEntity<String>("Plane saved: " + planeService.savePlane(plane).toString(), HttpStatus.OK);
         } catch (IOException e) {
-            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);//500
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("ObjectExistException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (HibernateException e) {
@@ -98,7 +98,7 @@ public class PlaneController {
             Plane plane = generalMapper.mappingObject(request, Plane.class);
             return new ResponseEntity<String>("Plane was updated succesfully. " + planeService.updatePlane(plane).toString(), HttpStatus.OK);
         } catch (IOException e) {
-            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //500
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (HibernateException e) {
@@ -121,7 +121,7 @@ public class PlaneController {
         return new ResponseEntity<String>("Planes older than 20 years: \n" + stringBuilderPlanes, HttpStatus.OK);
     }
 
-
+    // http://localhost:8080/regularPlanes?year=1984
     //regularPlanes(int year) - самолеты, которые с больше 300 полетов за год
     @RequestMapping(method = RequestMethod.GET, value = "/regularPlanes", produces = "text/plain")
     public ResponseEntity<String> regularPlanes(HttpServletRequest request) {

@@ -40,7 +40,7 @@ public class PassengerController {
             Passenger passenger = generalMapper.mappingObject(request, Passenger.class);
             return new ResponseEntity<String>("savePassenger(). Result:  success" + passengerService.savePassenger(passenger).toString(), HttpStatus.OK);
         } catch (IOException e) {
-            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //500
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("ObjectExistException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (HibernateException e) {
@@ -116,7 +116,7 @@ public class PassengerController {
             Passenger passenger = generalMapper.mappingObject(request, Passenger.class);
             return new ResponseEntity<String>("updatePasenger(). Result:  success" + passengerService.updatePassenger(passenger).toString(), HttpStatus.OK);
         } catch (IOException e) {
-            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //500
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (HibernateException e) {

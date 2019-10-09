@@ -1,7 +1,9 @@
 package com.lesson6_1.repository;
 import com.lesson6_1.model.Plane;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface RepositoryInterface<T>{
 
     public T save(T t);

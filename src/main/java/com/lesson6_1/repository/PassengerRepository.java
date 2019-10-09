@@ -1,9 +1,6 @@
 package com.lesson6_1.repository;
 
 import com.lesson6_1.model.Passenger;
-import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.persistence.EntityManager;
@@ -12,6 +9,17 @@ import javax.persistence.Query;
 import java.util.List;
 
 public class PassengerRepository implements RepositoryInterface<Passenger> {
+
+    // пассажиры, с больше 25 полетов за год
+    private String passengerWithMore25Flight = "SELECT * FROM " +
+            "(SELECT COUNT(*) AS COUNT, PASSENGER_ID AS PASS_ID , LASTNAME AS LASTNAME " +
+            "FROM JOIN_FLIGHT_PASSENGER " +
+            "JOIN PASSENGER ON JOIN_FLIGHT_PASSENGER.PASSENGER_ID = PASSENGER.ID " +
+            "JOIN FLIGHT ON JOIN_FLIGHT_PASSENGER.FLIGHT_ID = FLIGHT.ID WHERE EXTRACT(YEAR FROM DATEFLIGHT) = :year " +
+            "GROUP BY PASSENGER_ID, LASTNAME) " +
+            "WHERE COUNT > 25";
+
+    private String checkIfPresent = "SELECT * FROM PASSENGER  WHERE LASTNAME = :LASTNAME AND PASPORTCODE = :PASPORTCODE ";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -43,7 +51,7 @@ public class PassengerRepository implements RepositoryInterface<Passenger> {
 
     @Override
     public boolean checkIfPresent(Passenger passenger) {
-        Query q = entityManager.createNativeQuery("SELECT * FROM PASSENGER  WHERE LASTNAME = :LASTNAME AND PASPORTCODE = :PASPORTCODE ");
+        Query q = entityManager.createNativeQuery(checkIfPresent);
         q.setParameter("LASTNAME", passenger.getLastName());
         q.setParameter("PASPORTCODE", passenger.getPasportCode());
 
@@ -52,5 +60,11 @@ public class PassengerRepository implements RepositoryInterface<Passenger> {
             return false;
         }
         return true;
+    }
+
+    public List<Object[]> customersWithMoreThan25Flights(int year) {
+        Query q = entityManager.createNativeQuery(passengerWithMore25Flight);
+        q.setParameter("year", year);
+        return q.getResultList();
     }
 }

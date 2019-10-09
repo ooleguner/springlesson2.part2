@@ -76,17 +76,12 @@ public class AppConfig {
 
     @Bean
     public PlaneService planeService() {
-        return new PlaneService(planeRepository(), filterHelper());
+        return new PlaneService(planeRepository());
     }
 
     @Bean
-    public RepositoryInterface<Plane> planeRepository() {
+    public PlaneRepository planeRepository() {
         return new PlaneRepository();
-    }
-
-    @Bean
-    public FilterHelper filterHelper() {
-        return new FilterHelper();
     }
 
     @Bean
@@ -105,10 +100,13 @@ public class AppConfig {
     }
 
     @Bean
-    public RepositoryInterface<Passenger> passengerRepository() {
+    public PassengerRepository passengerRepository() {
         return new PassengerRepository();
     }
-
+    @Bean
+    public Plane plane() {
+        return new Plane();
+    }
     @Bean
     public Flight flight() {
         return new Flight();
@@ -121,11 +119,11 @@ public class AppConfig {
 
     @Bean
     public FlightService flightService() {
-        return new FlightService(flightRepository(), passengerRepository(), filterHelper());
+        return new FlightService(flightRepository(), passengerRepository());
     }
 
     @Bean
-    public RepositoryInterface<Flight> flightRepository() {
+    public FlightRepository flightRepository() {
         return new FlightRepository();
     }
 

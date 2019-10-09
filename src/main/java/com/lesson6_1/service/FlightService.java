@@ -4,6 +4,8 @@ import com.lesson6_1.exception.ObjectExistException;
 import com.lesson6_1.model.Flight;
 import com.lesson6_1.model.Passenger;
 import com.lesson6_1.repository.FilterHelper;
+import com.lesson6_1.repository.FlightRepository;
+import com.lesson6_1.repository.PassengerRepository;
 import com.lesson6_1.repository.RepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,15 +18,13 @@ import java.util.List;
 @Transactional
 public class FlightService {
 
-    RepositoryInterface repositoryFlight;
-    RepositoryInterface repositoryPassenger;
-    FilterHelper filterHelper;
+    FlightRepository repositoryFlight;
+    PassengerRepository repositoryPassenger;
 
     @Autowired
-    public FlightService(RepositoryInterface repositoryFlight, RepositoryInterface repositoryPassenger, FilterHelper filterHelper) {
+    public FlightService(FlightRepository repositoryFlight, PassengerRepository repositoryPassenger) {
         this.repositoryFlight = repositoryFlight;
         this.repositoryPassenger = repositoryPassenger;
-        this.filterHelper = filterHelper;
     }
 
     @Transactional
@@ -70,6 +70,7 @@ public class FlightService {
             throw e;
         }
     }
+
     @Transactional
     public Flight getFlight(long l) throws ObjectExistException {
         Flight flight = (Flight) repositoryFlight.findById(l);
@@ -78,6 +79,7 @@ public class FlightService {
         }
         return flight;
     }
+
     @Transactional
     public Flight updateFlight(Flight flight) throws ObjectExistException {
 
@@ -91,9 +93,10 @@ public class FlightService {
         // саме поновлення
         return (Flight) repositoryFlight.update(flight);
     }
+
     @Transactional
     public String regularPassengers(int year) {
-        List<Object[]> result = filterHelper.customersWithMoreThan25Flights(year);
+        List<Object[]> result = repositoryPassenger.customersWithMoreThan25Flights(year);
 
         if (result.isEmpty() || result.size() == 0) {
             return "There is no one customer with more than 25 flights";
@@ -107,9 +110,10 @@ public class FlightService {
         System.out.println(s);
         return s;
     }
+
     @Transactional
     public String mostPopularTo() {
-        List<Object[]> result = filterHelper.mostPopularTo();
+        List<Object[]> result = repositoryFlight.mostPopularTo();
         if (result.isEmpty() || result.size() == 0) {
             return "List of flights is empty.";
         }
@@ -121,9 +125,10 @@ public class FlightService {
         System.out.println(s);
         return s;
     }
+
     @Transactional
     public String mostPopularFrom() {
-        List<Object[]> result = filterHelper.mostPopularFrom();
+        List<Object[]> result = repositoryFlight.mostPopularFrom();
         if (result.isEmpty() || result.size() == 0) {
             return "List of flights is empty.";
         }
@@ -135,13 +140,13 @@ public class FlightService {
         System.out.println(s);
         return s;
     }
-    @Transactional
-    public String filter(String model, String date, String cityFrom, String dateBegin,String dateEnd, String cityTo) {
-        List<Flight> result = filterHelper.filer(model, date,cityFrom,dateBegin,dateEnd,cityTo);
+
+    public String flightsByDate(String model, String dateString, String cityFrom, String dateBegin, String dateEnd, String cityTo) {
+        List<Flight> result = repositoryFlight.flightsByDate(model, dateString, cityFrom, dateBegin, dateEnd, cityTo);
 
         StringBuilder stringBuilder = new StringBuilder();
-        if (result.size()!=0){
-            for(Flight flight : result){
+        if (result.size() != 0) {
+            for (Flight flight : result) {
                 stringBuilder.append(flight.toString() + "\n");
             }
             return stringBuilder.toString();

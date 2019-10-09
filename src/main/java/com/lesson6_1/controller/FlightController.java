@@ -43,7 +43,7 @@ http://localhost:8080/saveFlight
             Flight flight = generalMapper.mappingObject(request, Flight.class);
             return new ResponseEntity<String>("saveFlight(). Result:  success" + flightService.saveFlight(flight).toString(), HttpStatus.OK);
         } catch (IOException e) {
-            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //500
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>("ObjectExistException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (HibernateException e) {
@@ -65,7 +65,7 @@ http://localhost:8080/saveFlight
             flightService.addPasengerToFlight(Long.parseLong(idPasenger), Long.parseLong(idFlight));
             return new ResponseEntity<String>("Passenger id: " + idPasenger + " was regustered to flight id : " + idFlight, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //500
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (HibernateException e) {
@@ -115,7 +115,7 @@ http://localhost:8080/saveFlight
             Flight flight = generalMapper.mappingObject(request, Flight.class);
             return new ResponseEntity<String>("updateFlight(). Result:  success" + flightService.updateFlight(flight).toString(), HttpStatus.OK);
         } catch (IOException e) {
-            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("IOException : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); //500
         } catch (ObjectExistException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (HibernateException e) {
@@ -160,24 +160,24 @@ http://localhost:8080/saveFlight
     // flightsByDate(Filter filter) - список рейсов по дате (в один день), по промежутку даты (с даты-по дату) городу отправки, городу назначения, модели самолета
 
     /*
-    http://localhost:8080/flightsFilter?oneDay=11.09.1984&cityFrom=Kiev
+    http://localhost:8080/flightsFilter?oneDay=1984-09-11&cityFrom=Kiev
     http://localhost:8080/flightsFilter?cityFrom=Kiev
-    http://localhost:8080/flightsFilter?cityFrom=Kiev&datesFlight=11.09.1984-12.09.1984
-    http://localhost:8080/flightsFilter?datesFlight=11.09.1984-12.09.1984
+    http://localhost:8080/flightsFilter?cityFrom=Kiev&datesFlight=1984-09-11:1984-09-11
+    http://localhost:8080/flightsFilter?datesFlight=1984-09-11:1984-09-11
     http://localhost:8080/flightsFilter?cityFrom=Kiev&cityTo=Lvdov
     http://localhost:8080/flightsFilter?cityTo=Lvdov
     http://localhost:8080/flightsFilter?model=Updates&cityTo=Lvdov
      */
     @RequestMapping(method = RequestMethod.GET, value = "/flightsFilter", produces = "text/plain")
     public ResponseEntity<String> flightsByDate(HttpServletRequest request) {
-        String date = request.getParameter("oneDay");
+        String dateString = request.getParameter("oneDay");
         String cityFrom = request.getParameter("cityFrom");
 
         String datesFlight = request.getParameter("datesFlight");
-        String dateBegin=null;
-        String dateEnd=null;
+        String dateBegin = null;
+        String dateEnd = null;
         if (datesFlight != null) {
-            String[] arrDates = datesFlight.split("-");
+            String[] arrDates = datesFlight.split(":");
             dateBegin = arrDates[0];
             dateEnd = arrDates[1];
         }
@@ -185,12 +185,11 @@ http://localhost:8080/saveFlight
         String model = request.getParameter("model");
 
 
-
         try {
-            return new ResponseEntity<String>("flightsFilter(). Result:  SUCCESS.  \n" + flightService.filter(model, date, cityFrom, dateBegin,dateEnd, cityTo), HttpStatus.OK);
+            return new ResponseEntity<String>("flightsFilter(). Result:  SUCCESS.  \n" + flightService.flightsByDate(model, dateString, cityFrom, dateBegin, dateEnd, cityTo), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<String>("IOException " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        }catch (HibernateException e) {
+        } catch (HibernateException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);  //500
         }
     }
